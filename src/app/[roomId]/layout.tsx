@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
       images: [
         {
-          url: "https://huddle01.com/images/huddle01.png",
+          url: "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/logo%20maybe.png",
           width: 800,
           height: 600,
         },
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           action: {
             type: "launch_frame",
             name: "Yapster",
-            url: `https://yapster.vercel.app/${roomId}/lobby`,
+            url: `https://yapster-alpha.vercel.app/${roomId}/lobby`,
             splashImageUrl:
               "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/logo%20maybe.png",
             splashBackgroundColor: "#131313",
