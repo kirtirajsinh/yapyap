@@ -1,0 +1,17 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjY4NjEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHhBNTkzMUE3MjZDRUNjYTA1N0EzRkY0M0E4NDg4MzQ2NjI2MDQ3OEI0In0",
+    "payload": "eyJkb21haW4iOiJ5YXBzdGVyLnZlcmNlbC5hcHAifQ",
+    "signature": "MHg3ODFhOWQyZjFlNWIxOTVjYTIyNDU5MDdiMGJkODU3Y2Y0NGI3NDI2OWJjMDcyMjc0YjQ1ZTMxNzg4MTI4NjYyNGM2NmU0NjdkZWZmMDQ2Nzg5OWYzNWExZjMxNjcyYTdkNGZjMDIwNjA0NGZiY2Q4MjM2YWU3M2FlMDk0ZjRjOTFi"
+  },
+  "frame": {
+    "version": "1",
+    "name": "Yapster",
+    "iconUrl": "https://yapster.vercel.app/vercel.svg",
+    "homeUrl": "https://yapster.vercel.app",
+    "imageUrl": "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/logo%20maybe.png",
+    "buttonTitle": "Check this out",
+    "splashImageUrl": "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/logo%20maybe.png",
+    "splashBackgroundColor": "#eeccff"
+}
+}
