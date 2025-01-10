@@ -1,7 +1,7 @@
-import { BasicIcons } from '@/assets/BasicIcons';
-import useStore from '@/store/slices';
-import React from 'react';
-import ViewComponent from '../ViewController';
+import { BasicIcons } from "@/assets/BasicIcons";
+import useStore from "@/store/slices";
+import React from "react";
+import ViewComponent from "../ViewController";
 
 type HeaderProps = {
   title?: string;
@@ -15,10 +15,12 @@ const Header: React.FC<HeaderProps> = ({ title, icon, onClose }) => {
   const setSidebarView = useStore((state) => state.setSidebarView);
 
   return (
-    <div className="px-6 py-3 border-b border-slate-800 flex items-start justify-between w-full">
-      <div className="flex items-center gap-4">
+    <div className="px-4 sm:px-6 py-2 sm:py-3 border-b border-slate-800 flex items-start justify-between w-full">
+      <div className="flex items-center gap-2 sm:gap-4">
         <div>{icon}</div>
-        <div className="text-slate-300 text-base font-inter">{title}</div>
+        <div className="text-slate-300 text-sm sm:text-base font-inter">
+          {title}
+        </div>
       </div>
 
       <button type="button" onClick={onClose}>
