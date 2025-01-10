@@ -2,6 +2,8 @@ import { BasicIcons } from '@/assets/BasicIcons';
 import Peers from './Peers/Peers';
 import Chat from '../Chat/Chat';
 
+import type { JSX } from "react";
+
 export type TViewComponent = {
   [key: string]: {
     icon: JSX.Element;

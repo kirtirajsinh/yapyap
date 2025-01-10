@@ -1,10 +1,12 @@
-import type React from 'react';
+import type React from "react";
 
 // Radix ui
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+
+import type { JSX } from "react";
 
 type DropdownProps = {
-  align?: 'center' | 'start' | 'end';
+  align?: "center" | "start" | "end";
   open?: boolean;
   onOpenChange?(open: boolean): void;
   triggerChild: JSX.Element;
