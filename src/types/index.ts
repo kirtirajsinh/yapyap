@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 export interface ISvgIcons {
   [key: string]: JSX.Element;
 }
