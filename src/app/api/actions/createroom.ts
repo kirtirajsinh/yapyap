@@ -5,14 +5,15 @@ interface RoomDetails {
         roomId: string;
     };
 }
-export const createRoom = async (title: string, hostWallets: string[]) => {
+export const createRoom = async (title: string, hostWallet: string,) => {
     const res = await fetch(
         "https://api.huddle01.com/api/v2/sdk/rooms/create-room",
         {
             method: "POST",
             body: JSON.stringify({
                 title: title,
-                hostWallets: hostWallets ? hostWallets : [],
+                hostWallets: hostWallet ? hostWallet : "",
+                
             }),
             headers: {
                 "Content-Type": "application/json",
