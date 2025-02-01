@@ -17,6 +17,7 @@ import useStore from "@/store/slices";
 
 // Hooks
 import { useRoom } from "@huddle01/react/hooks";
+import { useAccount } from "wagmi";
 
 type TLobboyProps = { params: Promise<{ roomId: string }> };
 
@@ -29,17 +30,22 @@ const Lobby = (props: TLobboyProps) => {
   const setUserDisplayName = useStore((state) => state.setUserDisplayName);
   const userDisplayName = useStore((state) => state.userDisplayName);
   const [isJoining, setIsJoining] = useState<boolean>(false);
-  const { push } = useRouter();
+  const router = useRouter();
+  const { address, isConnected } = useAccount();
 
   // Huddle Hooks
   const { joinRoom, state } = useRoom();
 
   const handleStartSpaces = async () => {
+    if (!isConnected) {
+      toast.error("Please connect your wallet first!");
+      return;
+    }
     setIsJoining(true);
     let token = "";
     if (state !== "connected") {
       const response = await fetch(
-        `/token?roomId=${params.roomId}&name=${userDisplayName}`
+        `/token?roomId=${params.roomId}&name=${userDisplayName}&walletAddress=${address}`
       );
       token = await response.text();
     }
@@ -52,14 +58,9 @@ const Lobby = (props: TLobboyProps) => {
       roomId: params.roomId,
       token,
     });
+    router.push(`/${params.roomId}`);
     setIsJoining(false);
   };
-
-  useEffect(() => {
-    if (state === "connected") {
-      push(`/${params.roomId}`);
-    }
-  }, [state]);
 
   return (
     <main className="flex h-screen flex-col items-center justify-center bg-lobby text-slate-100">

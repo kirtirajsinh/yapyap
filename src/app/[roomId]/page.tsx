@@ -21,6 +21,7 @@ import useStore from "@/store/slices";
 import { toast } from "react-hot-toast";
 import { Role } from "@huddle01/server-sdk/auth";
 import Chat from "@/components/Chat/Chat";
+import { useAccount } from "wagmi";
 // import Chat from '@/components/Chat/Chat';
 
 const Home = (props: { params: Promise<{ roomId: string }> }) => {
@@ -45,23 +46,26 @@ const Home = (props: { params: Promise<{ roomId: string }> }) => {
     displayName: string;
     avatarUrl: string;
     isHandRaised: boolean;
+    walletAddress: string;
   }>();
-  const { peerIds } = usePeerIds();
+  // const { peerIds } = usePeerIds();
 
-  const { huddleClient } = useHuddle01();
+  // const { huddleClient } = useHuddle01();
+
+  const { address } = useAccount();
 
   useEffect(() => {
     if (state === "idle") {
       push(`/${params.roomId}/lobby`);
       return;
     }
-    updateMetadata({
-      displayName: userDisplayName,
-      avatarUrl: avatarUrl,
-      isHandRaised: metadata?.isHandRaised || false,
-    });
+    // updateMetadata({
+    //   displayName: userDisplayName,
+    //   avatarUrl: avatarUrl,
+    //   isHandRaised: metadata?.isHandRaised || false,
+    //   walletAddress: address || "",
+    // });
   }, []);
-
   useDataMessage({
     onMessage(payload, from, label) {
       if (label === "requestToSpeak") {

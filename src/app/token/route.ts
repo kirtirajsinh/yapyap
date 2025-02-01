@@ -6,6 +6,7 @@ const createToken = async (
   roomId: string,
   role: string,
   displayName: string,
+  walletAddress: string,
 ) => {
   const accessToken = new AccessToken({
     apiKey: process.env.API_KEY as string,
@@ -27,6 +28,7 @@ const createToken = async (
     options: {
       metadata: {
         displayName,
+        walletAddress,
       },
     },
   });
@@ -41,6 +43,7 @@ export async function GET(request: Request) {
 
   const roomId = searchParams.get('roomId');
   const name = searchParams.get('name');
+  const walletAddress = searchParams.get('walletAddress');
 
   if (!roomId) {
     return new Response('Missing roomId', { status: 400 });
@@ -64,9 +67,10 @@ export async function GET(request: Request) {
       roomId,
       previewPeers.length > 0 ? Role.LISTENER : Role.HOST,
       name ?? 'Guest',
+      walletAddress ?? '',
     );
   } catch (error) {
-    token = await createToken(roomId, Role.HOST, name ?? 'Guest');
+    token = await createToken(roomId, Role.HOST, name ?? 'Guest', walletAddress ?? '');
   }
 
   return new Response(token, { status: 200 });
