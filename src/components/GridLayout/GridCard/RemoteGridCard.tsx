@@ -1,51 +1,65 @@
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
 
 // Assets
-import { BasicIcons } from '@/assets/BasicIcons';
+import { BasicIcons } from "@/assets/BasicIcons";
 import {
+  useActivePeers,
   useDataMessage,
+  usePeerIds,
   useRemoteAudio,
   useRemotePeer,
-} from '@huddle01/react/hooks';
-import AudioElem from '@/components/common/AudioElem';
-import { getFallbackAvatar } from '@/utils/helpers';
+} from "@huddle01/react/hooks";
+import AudioElem from "@/components/common/AudioElem";
+import { getFallbackAvatar } from "@/utils/helpers";
 
 type GridCardProps = {
   peerId: string;
 };
 
 const GridCard: React.FC<GridCardProps> = ({ peerId }) => {
-  const [reaction, setReaction] = useState('');
+  const [reaction, setReaction] = useState("");
+  const { activePeerIds, dominantSpeakerId } = useActivePeers();
 
-  const { metadata, role } = useRemotePeer<{
+  const {
+    metadata,
+    role,
+    peerId: remotePeerId,
+  } = useRemotePeer<{
     displayName: string;
     avatarUrl: string;
     isHandRaised: boolean;
   }>({ peerId });
 
+  const { peerIds } = usePeerIds();
+  console.log(peerIds, "peerIds");
+
   const { stream, isAudioOn } = useRemoteAudio({
     peerId,
     onPlayable: () => {
-      console.debug('ON PLAYABLE');
+      console.debug("ON PLAYABLE");
     },
   });
 
   useDataMessage({
     onMessage(payload, from, label) {
       if (from === peerId) {
-        if (label === 'reaction') {
+        if (label === "reaction") {
           setReaction(payload);
           setTimeout(() => {
-            setReaction('');
+            setReaction("");
           }, 5000);
         }
       }
     },
   });
 
+  console.log(dominantSpeakerId, "activePeerIds", activePeerIds);
+
   return (
-    <div className="relative flex items-center justify-center flex-col">
+    <div
+      className={`relative flex items-center justify-center flex-col transition-all `}
+    >
       {stream && <AudioElem peerId={peerId} />}
       <Image
         src={metadata?.avatarUrl || getFallbackAvatar()}
@@ -54,7 +68,9 @@ const GridCard: React.FC<GridCardProps> = ({ peerId }) => {
         height={100}
         quality={100}
         priority
-        className="maskAvatar"
+        className={`maskAvatar ${
+          dominantSpeakerId === remotePeerId ? "border-2 border-red-500" : ""
+        }`}
       />
 
       <div className="mt-1 text-center">
@@ -66,7 +82,7 @@ const GridCard: React.FC<GridCardProps> = ({ peerId }) => {
       <div className="absolute left-1/2 bottom-1/2 -translate-x-1/2 mb-2 text-4xl">
         {reaction}
       </div>
-      {role && ['host, coHost, speaker'].includes(role) && (
+      {role && ["host, coHost, speaker"].includes(role) && (
         <div className="absolute right-0">{BasicIcons.audio}</div>
       )}
       {metadata?.isHandRaised && (
