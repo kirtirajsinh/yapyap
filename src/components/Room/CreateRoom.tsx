@@ -93,8 +93,14 @@ const CreateRoom = () => {
     <>
       <Button
         variant="outline"
-        disabled={!isConnected || isCreating}
-        onClick={() => setIsOpen(true)}
+        disabled={isCreating}
+        onClick={() => {
+          if (!isConnected) {
+            toast.error("Please connect your wallet first!");
+            return;
+          }
+          setIsOpen(true);
+        }}
       >
         Start Yapping
       </Button>
