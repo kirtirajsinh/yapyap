@@ -10,7 +10,7 @@ import {
 } from "@/lib/kv";
 import { sendFrameNotification } from "@/lib/notifs";
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
     const requestJson = await request.json();
 
     console.log(requestJson, "request json");
@@ -26,22 +26,22 @@ export async function POST(request: NextRequest) {
             case "VerifyJsonFarcasterSignature.InvalidDataError":
             case "VerifyJsonFarcasterSignature.InvalidEventDataError":
                 // The request data is invalid
-                return Response.json(
-                    { success: false, error: error.message },
-                    { status: 400 }
-                );
+                return new Response(JSON.stringify({ success: false, error: error.message }), {
+                    status: 400,
+                    headers: { 'Content-Type': 'application/json' },
+                });
             case "VerifyJsonFarcasterSignature.InvalidAppKeyError":
                 // The app key is invalid
-                return Response.json(
-                    { success: false, error: error.message },
-                    { status: 401 }
-                );
+                return new Response(JSON.stringify({ success: false, error: error.message }), {
+                    status: 401,
+                    headers: { 'Content-Type': 'application/json' },
+                });
             case "VerifyJsonFarcasterSignature.VerifyAppKeyError":
                 // Internal error verifying the app key (caller may want to try again)
-                return Response.json(
-                    { success: false, error: error.message },
-                    { status: 500 }
-                );
+                return new Response(JSON.stringify({ success: false, error: error.message }), {
+                    status: 500,
+                    headers: { 'Content-Type': 'application/json' },
+                });
         }
     }
 
@@ -85,5 +85,8 @@ export async function POST(request: NextRequest) {
             break;
     }
 
-    return Response.json({ success: true });
+    return new Response(JSON.stringify({ success: true }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+    });
 }
