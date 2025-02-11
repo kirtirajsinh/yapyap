@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState, use } from "react";
+import React, { useState, use, useCallback, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 // Assets
@@ -17,6 +17,8 @@ import useStore from "@/store/slices";
 
 // Hooks
 import { useRoom } from "@huddle01/react/hooks";
+import { useAccount } from "wagmi";
+import { useUserStore } from "@/hooks/UserStore";
 
 type TLobboyProps = { params: Promise<{ roomId: string }> };
 
@@ -29,17 +31,37 @@ const Lobby = (props: TLobboyProps) => {
   const setUserDisplayName = useStore((state) => state.setUserDisplayName);
   const userDisplayName = useStore((state) => state.userDisplayName);
   const [isJoining, setIsJoining] = useState<boolean>(false);
-  const { push } = useRouter();
+  const router = useRouter();
+  const { address, isConnected } = useAccount();
+  const { user } = useUserStore();
+
+  // Callback to update the user info when `user` changes
+  useMemo(() => {
+    if (user) {
+      if (!userDisplayName) {
+        setUserDisplayName(user.displayName || "Guest");
+      }
+      setAvatarUrl(user?.pfpUrl || "/default-avatar.png");
+    }
+  }, [setAvatarUrl, setUserDisplayName, user, userDisplayName]); // Only run when `user` changes
 
   // Huddle Hooks
   const { joinRoom, state } = useRoom();
 
   const handleStartSpaces = async () => {
+    if (!isConnected) {
+      toast.error("Please connect your wallet first!");
+      return;
+    }
+    if (!userDisplayName.length) {
+      toast.error("Display name is required!");
+      return;
+    }
     setIsJoining(true);
     let token = "";
     if (state !== "connected") {
       const response = await fetch(
-        `/token?roomId=${params.roomId}&name=${userDisplayName}`
+        `/token?roomId=${params.roomId}&name=${userDisplayName}&walletAddress=${address}&avatarUrl=${avatarUrl}`
       );
       token = await response.text();
     }
@@ -52,14 +74,9 @@ const Lobby = (props: TLobboyProps) => {
       roomId: params.roomId,
       token,
     });
+    router.push(`/${params.roomId}`);
     setIsJoining(false);
   };
-
-  useEffect(() => {
-    if (state === "connected") {
-      push(`/${params.roomId}`);
-    }
-  }, [state]);
 
   return (
     <main className="flex h-screen flex-col items-center justify-center bg-lobby text-slate-100">
@@ -95,6 +112,7 @@ const Lobby = (props: TLobboyProps) => {
                 ? "absolute top-4 block"
                 : "absolute top-1/2 -translate-y-1/2 hidden "
             }
+            isOpen={isOpen}
           >
             <div className="relative mt-5">
               <div className="grid-cols-3  grid h-full w-full  place-items-center   gap-6  px-6 ">
@@ -146,6 +164,7 @@ const Lobby = (props: TLobboyProps) => {
                 type="text"
                 placeholder="Enter your name"
                 className="flex-1 bg-transparent py-3 outline-none"
+                required
               />
             </div>
           </div>
@@ -154,6 +173,7 @@ const Lobby = (props: TLobboyProps) => {
           <button
             className="flex items-center justify-center bg-[#246BFD] text-slate-100 rounded-md p-2 mt-2 w-full"
             onClick={handleStartSpaces}
+            disabled={isJoining}
           >
             {isJoining ? "Joining Spaces..." : "Start Spaces"}
             {!isJoining && (

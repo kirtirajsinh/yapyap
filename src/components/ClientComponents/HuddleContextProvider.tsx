@@ -3,8 +3,7 @@
 import dynamic from "next/dynamic";
 import type React from "react";
 import { HuddleClient, HuddleProvider } from "@huddle01/react";
-import { PropsWithChildren, useEffect } from "react";
-import FrameSDK from "@farcaster/frame-sdk";
+import { ThemeProvider } from "../theme-provider";
 
 const Toaster = dynamic(
   () => import("react-hot-toast").then((m) => m.Toaster),
@@ -13,20 +12,13 @@ const Toaster = dynamic(
   }
 );
 
+const Provider = dynamic(() => import("./WagmiProvider"), {
+  ssr: false,
+});
+
 type ToasterProps = {
   children: React.ReactNode;
 };
-
-function FarcasterFrameProvider({ children }: PropsWithChildren) {
-  useEffect(() => {
-    const load = async () => {
-      console.log("Running Frame Action ready");
-      FrameSDK.actions.ready();
-    };
-    load();
-  }, []);
-  return <>{children}</>;
-}
 
 const HuddleContextProvider: React.FC<ToasterProps> = ({ children }) => {
   const huddleClient = new HuddleClient({
@@ -34,9 +26,9 @@ const HuddleContextProvider: React.FC<ToasterProps> = ({ children }) => {
   });
 
   return (
-    <HuddleProvider client={huddleClient}>
-      <FarcasterFrameProvider>
-        <>
+    <Provider>
+      <HuddleProvider client={huddleClient}>
+        <ThemeProvider themes={["light", "dark"]} defaultTheme="dark">
           {children}
           <Toaster
             position="bottom-right"
@@ -66,9 +58,9 @@ const HuddleContextProvider: React.FC<ToasterProps> = ({ children }) => {
               },
             }}
           />
-        </>
-      </FarcasterFrameProvider>
-    </HuddleProvider>
+        </ThemeProvider>
+      </HuddleProvider>
+    </Provider>
   );
 };
 export default HuddleContextProvider;

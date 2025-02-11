@@ -1,14 +1,14 @@
-import { NestedBasicIcons } from '@/assets/BasicIcons';
-import type React from 'react';
-import Button from '../common/Button';
-import useStore from '@/store/slices';
+import { NestedBasicIcons } from "@/assets/BasicIcons";
+import type React from "react";
+import Button from "../common/Button";
+import useStore from "@/store/slices";
 import {
   useDataMessage,
   useHuddle01,
   useLocalPeer,
   usePeerIds,
-} from '@huddle01/react/hooks';
-import { Role } from '@huddle01/server-sdk/auth';
+} from "@huddle01/react/hooks";
+import { Role } from "@huddle01/server-sdk/auth";
 
 type RequestToSpeakProps = {};
 
@@ -23,14 +23,15 @@ const RequestToSpeak: React.FC<RequestToSpeakProps> = () => {
   });
 
   const sendSpeakerRequest = () => {
+    console.log(peerIds, "sending request to speak");
     sendData({
       to: peerIds,
       payload: JSON.stringify({
         peerId,
       }),
-      label: 'requestToSpeak',
+      label: "requestToSpeak",
     });
-    setPromptView('close');
+    setPromptView("close");
   };
 
   return (
@@ -49,7 +50,7 @@ const RequestToSpeak: React.FC<RequestToSpeakProps> = () => {
         <Button
           type="button"
           className="bg-custom-3 w-36 text-custom-6"
-          onClick={() => setPromptView('close')}
+          onClick={() => setPromptView("close")}
         >
           Cancel
         </Button>

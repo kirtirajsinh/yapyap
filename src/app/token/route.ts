@@ -1,3 +1,4 @@
+import { geRoomMetaData } from '@/utils/helpers';
 import { AccessToken, Role } from '@huddle01/server-sdk/auth';
 
 export const dynamic = 'force-dynamic';
@@ -6,6 +7,8 @@ const createToken = async (
   roomId: string,
   role: string,
   displayName: string,
+  walletAddress: string,
+  avatarUrl: string,
 ) => {
   const accessToken = new AccessToken({
     apiKey: process.env.API_KEY as string,
@@ -27,6 +30,8 @@ const createToken = async (
     options: {
       metadata: {
         displayName,
+        walletAddress,
+        avatarUrl
       },
     },
   });
@@ -41,6 +46,14 @@ export async function GET(request: Request) {
 
   const roomId = searchParams.get('roomId');
   const name = searchParams.get('name');
+  const walletAddress = searchParams.get('walletAddress');
+  const avatarUrl = searchParams.get('avatarUrl');
+
+  const roomMetaData = await geRoomMetaData(roomId ?? '');
+  console.log('roomMetaData', roomMetaData);
+
+  const isHost = roomMetaData?.metadata?.hostWallet === walletAddress;
+  console.log('isHost', isHost, roomMetaData?.metadata?.hostWallet, walletAddress);
 
   if (!roomId) {
     return new Response('Missing roomId', { status: 400 });
@@ -49,24 +62,27 @@ export async function GET(request: Request) {
   let token: string;
 
   try {
-    const response = await fetch(
-      `https://api.huddle01.com/api/v1/live-meeting/preview-peers?roomId=${roomId}`,
-      {
-        headers: {
-          'x-api-key': process.env.API_KEY ?? '',
-        },
-      },
-    );
-    const data = await response.json();
-    const { previewPeers } = data;
+    // const response = await fetch(
+    //   `https://api.huddle01.com/api/v1/live-meeting/preview-peers?roomId=${roomId}`,
+    //   {
+    //     headers: {
+    //       'x-api-key': process.env.API_KEY ?? '',
+    //     },
+    //   },
+    // );
+    // const data = await response.json();
+    // const { previewPeers } = data;
 
     token = await createToken(
       roomId,
-      previewPeers.length > 0 ? Role.LISTENER : Role.HOST,
+      isHost ? Role.HOST : Role.LISTENER,
       name ?? 'Guest',
+      walletAddress ?? '',
+      avatarUrl ?? '',
     );
   } catch (error) {
-    token = await createToken(roomId, Role.HOST, name ?? 'Guest');
+    console.error('Error :', error);
+    token = await createToken(roomId, Role.LISTENER, name ?? 'Guest', walletAddress ?? '', avatarUrl ?? '');
   }
 
   return new Response(token, { status: 200 });

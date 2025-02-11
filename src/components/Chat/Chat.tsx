@@ -15,6 +15,7 @@ import {
   DrawerTitle,
 } from "../ui/drawer";
 import { Input } from "../ui/input";
+import useDevice from "../common/useDevice";
 
 const Chat = () => {
   const userDisplayName = useStore((state) => state.userDisplayName);
@@ -26,7 +27,7 @@ const Chat = () => {
   const { sendData } = useDataMessage();
   const setIsChatOpen = useStore((state) => state.setIsChatOpen);
   const isChatOpen = useStore((state) => state.isChatOpen);
-  const [isMobile, setIsMobile] = useState(false);
+  const { isMobile } = useDevice();
 
   async function handleSend() {
     sendDataToAllPeers();
@@ -65,7 +66,7 @@ const Chat = () => {
           chat.is_user
             ? "ml-auto text-md break-words max-w-xs w-fit py-1 px-4 mb-2 bg-[#216CFC] rounded-2xl items-center flex"
             : "w-fit py-1 px-4 break-words max-w-xs text-md mb-2 rounded-lg bg-[#343744]"
-        }`}
+        } scrollbar-thin`}
       >
         <div className="text-xs text-blue-300">
           {chat.is_user ? null : chat.name}
@@ -75,20 +76,6 @@ const Chat = () => {
     );
   });
 
-  useEffect(() => {
-    const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 640);
-    };
-    console.log("this is being called on every render");
-
-    checkIsMobile();
-    window.addEventListener("resize", checkIsMobile);
-
-    return () => {
-      window.removeEventListener("resize", checkIsMobile);
-    };
-  }, []);
-
   const ChatContent = () => (
     <div className="flex flex-col h-full" key="chat-content">
       <Header
@@ -97,15 +84,21 @@ const Chat = () => {
         onClose={() => setIsChatOpen(false)}
       />
 
-      <div ref={ref} className="overflow-auto mt-2 flex flex-col h-full">
-        <div className="font-sans">{displayChats}</div>
+      <div
+        ref={ref}
+        className={`flex-1 overflow-y-auto mt-2 bg-[#1A1C1F] p-2 rounded-lg ${
+          isMobile
+            ? "max-h-[50vh] h-[50vh] text-white"
+            : "max-h-[60vh] h-[60vh] "
+        }`}
+      >
+        <div>{displayChats}</div>
       </div>
-
-      <div className="flex py-1 pl-1 gap-2 mt-2">
+      <div className="flex items-center h-30 gap-2 p-2 bg-[#191B1F] rounded-lg mt-2">
         <Input
           type="text"
           placeholder="Type a message"
-          className="p-2 rounded-lg w-full bg-[#343744] text-xs sm:text-sm"
+          className=" flex-1 p-2 rounded-lg bg-[#343744] text-xs sm:text-sm focus:outline-none "
           value={message}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
@@ -113,7 +106,7 @@ const Chat = () => {
         />
         <button
           ref={buttonRef}
-          className="p-2 sm:p-1 bg-[#1A1C1F] rounded-lg flex items-center justify-center"
+          className="p-2 sm:p-1 bg-[#1A1C1F] rounded-lg flex items-center justify-center hover:bg-[#2A2C2F]"
           onClick={handleSend}
         >
           {BasicIcons.send}
@@ -125,12 +118,12 @@ const Chat = () => {
   if (isMobile) {
     return (
       <Drawer open={isChatOpen} onOpenChange={setIsChatOpen}>
-        <DrawerContent className="h-[80vh]">
+        <DrawerContent className="h-[80vh] ">
           <DrawerHeader>
-            <DrawerTitle>Yap</DrawerTitle>
+            <DrawerTitle className="">Yap</DrawerTitle>
           </DrawerHeader>
           <DrawerDescription className="text-center">
-            Chat with your peers
+            Chat with your frens
           </DrawerDescription>
           <div className=" w-full h-full p-2 ">
             <ChatContent />
@@ -146,5 +139,4 @@ const Chat = () => {
     </div>
   );
 };
-
 export default Chat;

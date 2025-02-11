@@ -1,69 +1,56 @@
 "use client";
 
-import React, { useEffect, useState, use } from "react";
-
-// Components
+import React, { useEffect, useState, useCallback, use } from "react";
 import BottomBar from "@/components/BottomBar/BottomBar";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import GridLayout from "@/components/GridLayout/GridLayout";
 import Prompts from "@/components/common/Prompts";
-import {
-  useRoom,
-  useLocalPeer,
-  useLocalAudio,
-  usePeerIds,
-  useHuddle01,
-  useDataMessage,
-} from "@huddle01/react/hooks";
+import { useRoom, useLocalPeer, useDataMessage } from "@huddle01/react/hooks";
 import { useRouter } from "next/navigation";
 import AcceptRequest from "@/components/Modals/AcceptRequest";
 import useStore from "@/store/slices";
-import { toast } from "react-hot-toast";
-import { Role } from "@huddle01/server-sdk/auth";
 import Chat from "@/components/Chat/Chat";
-// import Chat from '@/components/Chat/Chat';
+import { useAccount } from "wagmi";
 
-const Home = (props: { params: Promise<{ roomId: string }> }) => {
-  const params = use(props.params);
+// Define types for the component props
+interface HomeProps {
+  params: Promise<{ roomId: string }>;
+}
+
+// Define types for the metadata used in useLocalPeer
+interface PeerMetadata {
+  displayName: string;
+  avatarUrl: string;
+  isHandRaised: boolean;
+  walletAddress: string;
+}
+
+// Define types for the chat message payload
+interface ChatMessage {
+  name: string;
+  text: string;
+  is_user: boolean;
+}
+
+const Home: React.FC<HomeProps> = ({ params }) => {
+  const resolvedParams = use(params);
   const { state } = useRoom({
     onLeave: () => {
-      push(`/${params.roomId}/lobby`);
+      push(`/${resolvedParams.roomId}/lobby`);
     },
   });
   const { push } = useRouter();
-  // const { changePeerRole } = useAcl();
-  const [requestedPeerId, setRequestedPeerId] = useState("");
+  const [requestedPeerId, setRequestedPeerId] = useState<string>("");
   const { showAcceptRequest, setShowAcceptRequest } = useStore();
   const addChatMessage = useStore((state) => state.addChatMessage);
   const addRequestedPeers = useStore((state) => state.addRequestedPeers);
-  const removeRequestedPeers = useStore((state) => state.removeRequestedPeers);
   const requestedPeers = useStore((state) => state.requestedPeers);
-  const avatarUrl = useStore((state) => state.avatarUrl);
-  const userDisplayName = useStore((state) => state.userDisplayName);
   const isChatOpen = useStore((state) => state.isChatOpen);
-  const { updateMetadata, metadata, peerId, role } = useLocalPeer<{
-    displayName: string;
-    avatarUrl: string;
-    isHandRaised: boolean;
-  }>();
-  const { peerIds } = usePeerIds();
+  const { peerId } = useLocalPeer<PeerMetadata>();
 
-  const { huddleClient } = useHuddle01();
-
-  useEffect(() => {
-    if (state === "idle") {
-      push(`/${params.roomId}/lobby`);
-      return;
-    }
-    updateMetadata({
-      displayName: userDisplayName,
-      avatarUrl: avatarUrl,
-      isHandRaised: metadata?.isHandRaised || false,
-    });
-  }, []);
-
-  useDataMessage({
-    onMessage(payload, from, label) {
+  // Handle "requestToSpeak" data messages
+  const handleRequestToSpeak = useCallback(
+    (payload: string, from: string, label?: string) => {
       if (label === "requestToSpeak") {
         setShowAcceptRequest(true);
         setRequestedPeerId(from);
@@ -72,10 +59,17 @@ const Home = (props: { params: Promise<{ roomId: string }> }) => {
           setShowAcceptRequest(false);
         }, 5000);
       }
+    },
+    [setShowAcceptRequest, setRequestedPeerId, addRequestedPeers]
+  );
 
+  // Handle "chat" data messages
+  const handleChatMessage = useCallback(
+    (payload: string, from: string, label?: string) => {
       if (label === "chat" && from !== peerId) {
-        const messagePayload = JSON.parse(payload);
-        const newChatMessage = {
+        const messagePayload: { name: string; message: string } =
+          JSON.parse(payload);
+        const newChatMessage: ChatMessage = {
           name: messagePayload.name,
           text: messagePayload.message,
           is_user: false,
@@ -83,17 +77,34 @@ const Home = (props: { params: Promise<{ roomId: string }> }) => {
         addChatMessage(newChatMessage);
       }
     },
+    [addChatMessage, peerId]
+  );
+
+  // Set up data message listeners
+  useDataMessage({
+    onMessage: handleRequestToSpeak,
   });
 
+  useDataMessage({
+    onMessage: handleChatMessage,
+  });
+
+  // Redirect to lobby if room state is idle
+  useEffect(() => {
+    if (state === "idle") {
+      push(`/${resolvedParams.roomId}/lobby`);
+    }
+  }, [state, push, resolvedParams.roomId]);
+
+  // Hide the accept request modal if the peer is no longer in the requested list
   useEffect(() => {
     if (!requestedPeers.includes(requestedPeerId)) {
       setShowAcceptRequest(false);
     }
-  }, [requestedPeers]);
+  }, [requestedPeers, requestedPeerId, setShowAcceptRequest]);
 
   return (
     <section className="bg-audio flex min-h-screen flex-col items-center justify-center w-full relative text-slate-100 md:flex-row">
-      {/* Adjusting the layout for better mobile experience */}
       <div className="flex flex-col w-full items-center md:flex-row">
         <GridLayout />
         <Sidebar />
@@ -107,4 +118,5 @@ const Home = (props: { params: Promise<{ roomId: string }> }) => {
     </section>
   );
 };
-export default Home;
+
+export default React.memo(Home);
