@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import type React from "react";
 import { HuddleClient, HuddleProvider } from "@huddle01/react";
+import { ThemeProvider } from "../theme-provider";
 
 const Toaster = dynamic(
   () => import("react-hot-toast").then((m) => m.Toaster),
@@ -27,7 +28,7 @@ const HuddleContextProvider: React.FC<ToasterProps> = ({ children }) => {
   return (
     <Provider>
       <HuddleProvider client={huddleClient}>
-        <>
+        <ThemeProvider themes={["light", "dark"]} defaultTheme="dark">
           {children}
           <Toaster
             position="bottom-right"
@@ -57,7 +58,7 @@ const HuddleContextProvider: React.FC<ToasterProps> = ({ children }) => {
               },
             }}
           />
-        </>
+        </ThemeProvider>
       </HuddleProvider>
     </Provider>
   );
