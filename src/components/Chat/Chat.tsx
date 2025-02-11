@@ -66,7 +66,7 @@ const Chat = () => {
           chat.is_user
             ? "ml-auto text-md break-words max-w-xs w-fit py-1 px-4 mb-2 bg-[#216CFC] rounded-2xl items-center flex"
             : "w-fit py-1 px-4 break-words max-w-xs text-md mb-2 rounded-lg bg-[#343744]"
-        }`}
+        } scrollbar-thin`}
       >
         <div className="text-xs text-blue-300">
           {chat.is_user ? null : chat.name}
@@ -87,7 +87,9 @@ const Chat = () => {
       <div
         ref={ref}
         className={`flex-1 overflow-y-auto mt-2 bg-[#1A1C1F] p-2 rounded-lg ${
-          isMobile ? "max-h-[50vh] h-[50vh]" : "max-h-[60vh] h-[60vh]"
+          isMobile
+            ? "max-h-[50vh] h-[50vh] text-white"
+            : "max-h-[60vh] h-[60vh] "
         }`}
       >
         <div>{displayChats}</div>
@@ -116,9 +118,9 @@ const Chat = () => {
   if (isMobile) {
     return (
       <Drawer open={isChatOpen} onOpenChange={setIsChatOpen}>
-        <DrawerContent className="h-[80vh] bg-primary">
+        <DrawerContent className="h-[80vh] ">
           <DrawerHeader>
-            <DrawerTitle className="text-secondary">Yap</DrawerTitle>
+            <DrawerTitle className="">Yap</DrawerTitle>
           </DrawerHeader>
           <DrawerDescription className="text-center">
             Chat with your frens
