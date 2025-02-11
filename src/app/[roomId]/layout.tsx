@@ -1,6 +1,4 @@
 import React from "react";
-import Navbar from "@/components/common/Navbar";
-import HuddleContextProvider from "@/components/ClientComponents/HuddleContextProvider";
 import { cn } from "@/utils/helpers";
 import { Inter } from "next/font/google";
 import { Metadata } from "next";
@@ -17,8 +15,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { roomId } = await params;
   console.log(roomId, "params roomid from lobby");
 
+  const appUrl = process.env.NEXT_PUBLIC_URL;
+
   return {
-    title: `Yap Room`,
+    title: `Yapster`,
     description: `Join the Yap Session ${roomId}`,
     openGraph: {
       title: `Yap Room`,
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
       images: [
         {
-          url: "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/logo%20maybe.png",
+          url: "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/main%20image.png",
           width: 800,
           height: 600,
         },
@@ -36,16 +36,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       "fc:frame": JSON.stringify({
         version: "next",
         imageUrl:
-          "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/logo%20maybe.png",
+          "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/main%20image.png",
         button: {
-          title: "Yap",
+          title: "Start Yappin",
           action: {
             type: "launch_frame",
             name: "Yapster",
-            url: `https://yapster-alpha.vercel.app/${roomId}/lobby`,
+            url: `${appUrl}/${roomId}/lobby`,
             splashImageUrl:
-              "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/logo%20maybe.png",
-            splashBackgroundColor: "#131313",
+              "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/logo_full_yapster.png",
+            splashBackgroundColor: "#000000",
           },
         },
       }),
@@ -62,8 +62,7 @@ const Layout = ({
 }) => {
   return (
     <div className={cn("min-h-screen relative font-inter", inter.className)}>
-      <Navbar />
-      <HuddleContextProvider>{children}</HuddleContextProvider>
+      {children}
     </div>
   );
 };
