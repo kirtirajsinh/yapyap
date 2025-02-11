@@ -23,6 +23,8 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
+import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer";
+import Sidebar from "../Sidebar/Sidebar";
 
 type BottomBarProps = {};
 
@@ -71,7 +73,10 @@ const BottomBar: React.FC<BottomBarProps> = () => {
         {role === "host" || role === "coHost" || role === "speaker" ? (
           <div className="mr-auto flex items-center justify-between gap-2 sm:gap-3 w-32 sm:w-44" />
         ) : (
-          <OutlineButton className="mr-auto flex items-center justify-between gap-2 sm:gap-3 text-xs sm:text-sm">
+          <OutlineButton
+            className="mr-auto flex items-center justify-between gap-2 sm:gap-3 text-xs sm:text-sm"
+            onClick={() => setPromptView("request-to-speak")}
+          >
             {BasicIcons.requestToSpeak}
             <div className="hidden sm:block">Request to speak</div>
           </OutlineButton>
@@ -172,6 +177,7 @@ const BottomBar: React.FC<BottomBarProps> = () => {
               .length + 1}
           </span>
         </OutlineButton>
+
         <OutlineButton
           className="flex items-center"
           onClick={() => {
