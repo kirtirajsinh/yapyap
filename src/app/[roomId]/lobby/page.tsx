@@ -19,6 +19,7 @@ import useStore from "@/store/slices";
 import { useRoom } from "@huddle01/react/hooks";
 import { useAccount } from "wagmi";
 import { useUserStore } from "@/hooks/UserStore";
+import { Button } from "@/components/ui/button";
 
 type TLobboyProps = { params: Promise<{ roomId: string }> };
 
@@ -74,13 +75,16 @@ const Lobby = (props: TLobboyProps) => {
       roomId: params.roomId,
       token,
     });
-    router.push(`/${params.roomId}`);
+    await Promise.all([
+      router.push(`/${params.roomId}`),
+      new Promise((resolve) => setTimeout(resolve, 100)),
+    ]);
     setIsJoining(false);
   };
 
   return (
     <main className="flex h-screen flex-col items-center justify-center bg-lobby text-slate-100">
-      <div className="flex flex-col items-center justify-center gap-4 w-[26.25rem]">
+      <div className="flex flex-col items-center justify-center gap-4 w-[26.25rem] px-4">
         <div className="relative text-center flex items-center justify-center w-fit mx-auto">
           <Image
             src={avatarUrl}
@@ -142,7 +146,7 @@ const Lobby = (props: TLobboyProps) => {
             </div>
           </FeatCommon>
         </div>
-        <div className="flex items-center w-full flex-col">
+        <div className="flex items-center w-full flex-col ">
           <div className="flex flex-col justify-center w-full gap-1">
             Set a display name
             <div className="flex w-full items-center rounded-[10px] border px-3 text-slate-300 outline-none border-zinc-800 backdrop-blur-[400px] focus-within:border-slate-600 gap-">
@@ -170,8 +174,8 @@ const Lobby = (props: TLobboyProps) => {
           </div>
         </div>
         <div className="flex items-center w-full">
-          <button
-            className="flex items-center justify-center bg-[#246BFD] text-slate-100 rounded-md p-2 mt-2 w-full"
+          <Button
+            className="flex items-center justify-center p-2 mt-2 w-full"
             onClick={handleStartSpaces}
             disabled={isJoining}
           >
@@ -185,7 +189,7 @@ const Lobby = (props: TLobboyProps) => {
                 className="w-6 h-6 ml-1"
               />
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </main>

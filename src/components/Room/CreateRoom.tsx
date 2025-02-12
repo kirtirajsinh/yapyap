@@ -27,15 +27,30 @@ const CreateRoom = () => {
     // Handle room creation logic here
     console.log("Creating room:", roomName);
     setIsCreating(true);
-    if (address) {
-      const roomId = await createRoom(roomName, address);
+    try {
+      if (address) {
+        const roomId = await createRoom(roomName, address);
 
-      console.log("room", roomId);
+        console.log("room", roomId);
 
-      if (roomId) {
-        router.push(`/${roomId}/lobby`);
+        if (roomId) {
+          await Promise.all([
+            router.push(`/${roomId}/lobby`),
+            // Add a small delay to ensure the navigation has started
+            new Promise((resolve) => setTimeout(resolve, 100)),
+          ]);
+
+          // Close the dialog after successful creation
+          setIsOpen(false);
+          setIsCreating(false); // Reset the state on completion
+        }
       }
-      setIsCreating(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to create room. Please try again.");
+      setIsCreating(false); // Reset the state on error
+    } finally {
+      setIsCreating(false); // Reset the state on completion
     }
   };
 
@@ -83,7 +98,7 @@ const CreateRoom = () => {
           {isExpanded ? "Collapse" : "Tap to expand additional fields"}
         </Button>
         <Button type="submit" disabled={isCreating}>
-          Create Room
+          {isCreating ? "Creating..." : "Create Room"}
         </Button>
       </form>
     );

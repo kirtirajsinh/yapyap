@@ -9,11 +9,11 @@ export async function GET() {
         frame: {
             version: "1",
             name: "Yapster",
-            iconUrl: "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/logo_full_yapster.png",
+            iconUrl: "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/yap%20logo.png",
             homeUrl: "https://yapster.fun",
             imageUrl: "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/main%20image.png",
             buttonTitle: "Start Yapping",
-            splashImageUrl: "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/logo_full_yapster.png",
+            splashImageUrl: "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/yap%20logo.png",
             splashBackgroundColor: "#000000",
             webhookUrl: "https://yapster.fun/api/webhook"
         }
