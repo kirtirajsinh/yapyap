@@ -27,7 +27,7 @@ const DialogOrDrawerWrapper = ({
   if (isMobile) {
     return (
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
-        <DrawerContent className="h-[50vh] focus-visible:outline-none">
+        <DrawerContent className=" max-h-[90vh] focus-visible:outline-none mb-4">
           <DrawerHeader className="focus-visible:outline-none">
             <DrawerTitle className="text-center text-slate-300">
               {title}
