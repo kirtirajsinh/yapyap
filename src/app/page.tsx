@@ -30,7 +30,7 @@ export async function generateMetadata() {
             name: "Yapster",
             url: `${appUrl}`,
             splashImageUrl:
-              "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/logo_full_yapster.png",
+              "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/yap%20logo.png",
             splashBackgroundColor: "#000000",
           },
         },
