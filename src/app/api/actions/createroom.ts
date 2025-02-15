@@ -8,7 +8,7 @@ interface RoomDetails {
         roomId: string;
     };
 }
-export const createRoom = async (title: string, hostWallet: string) => {
+export const createRoom = async (title: string, hostWallet: string, imageUrl: string | null): Promise<string> => {
     console.log("title", title, hostWallet, "hostWallet");
     try {
         const api = new API({
@@ -20,6 +20,7 @@ export const createRoom = async (title: string, hostWallet: string) => {
             metadata: JSON.stringify({
                 'title': `${title}`,
                 'hostWallet': `${hostWallet}`,
+                'imageUrl': imageUrl
             })
         });
 
