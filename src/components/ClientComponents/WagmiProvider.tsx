@@ -43,7 +43,12 @@ function FarcasterFrameProvider({ children }: PropsWithChildren) {
       // Add the FrameSDK.actions.ready() otherwise your app will get stuck in a loading state i.e. a Splash screen.
       FrameSDK.actions.ready();
       const frameuser = await FrameSDK.context;
-      console.log("Frame Action ready", frameuser?.user);
+      console.log("FrameSDK.context", frameuser);
+
+      if (frameuser?.client?.added === false) {
+        console.log("FrameSDK.context", frameuser?.client?.added);
+        await FrameSDK.actions.addFrame();
+      }
 
       if (frameuser?.user) {
         setUser({
