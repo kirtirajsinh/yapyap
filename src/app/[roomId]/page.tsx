@@ -1,122 +1,80 @@
-"use client";
+import React from "react";
 
-import React, { useEffect, useState, useCallback, use } from "react";
-import BottomBar from "@/components/BottomBar/BottomBar";
-import Sidebar from "@/components/Sidebar/Sidebar";
-import GridLayout from "@/components/GridLayout/GridLayout";
-import Prompts from "@/components/common/Prompts";
-import { useRoom, useLocalPeer, useDataMessage } from "@huddle01/react/hooks";
-import { useRouter } from "next/navigation";
-import AcceptRequest from "@/components/Modals/AcceptRequest";
-import useStore from "@/store/slices";
-import Chat from "@/components/Chat/Chat";
-import { useAccount } from "wagmi";
+import SpacePage from "@/components/Space/SpacePage";
+import { Metadata } from "next";
 
 // Define types for the component props
 interface HomeProps {
   params: Promise<{ roomId: string }>;
 }
 
-// Define types for the metadata used in useLocalPeer
-interface PeerMetadata {
-  displayName: string;
-  avatarUrl: string;
-  isHandRaised: boolean;
-  walletAddress: string;
+type Props = {
+  params: { roomId: string };
+};
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { roomId } = await params;
+  const appUrl = process.env.NEXT_PUBLIC_URL;
+
+  let roomMetaData;
+
+  try {
+    const getMetadata = await fetch(
+      `${appUrl}/api/get-room-metadata?roomId=${roomId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "force-cache",
+        next: { revalidate: 3600 }, // Revalidate every hour
+      }
+    );
+    roomMetaData = await getMetadata.json();
+    console.log("roomData from generateMetadata", roomMetaData);
+  } catch (error) {
+    console.log("error in generateMetadata", error);
+  }
+
+  // Use cached version of the API call
+
+  const defaultImage =
+    "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/main%20image.png";
+  const imageUrl = roomMetaData?.metadata?.imageUrl || defaultImage;
+
+  const frameData = {
+    version: "next",
+    imageUrl: imageUrl,
+    button: {
+      title: roomMetaData?.metadata?.title
+        ? `join ${roomMetaData?.metadata?.title} on Yapster`
+        : "Start Yapping",
+      action: {
+        type: "launch_frame",
+        name: "Yapster",
+        url: `${appUrl}/${roomId}/lobby`,
+        splashImageUrl:
+          "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/yap%20logo.png",
+        splashBackgroundColor: "#000000",
+      },
+    },
+  };
+
+  return {
+    title: `Yapster`,
+    description: `Join the Yap Session ${roomId}`,
+    openGraph: {
+      title: `Yap Room`,
+      description: `Yap room ${roomId} - Join the game!`,
+      images: [{ url: imageUrl, width: 800, height: 600 }],
+    },
+    other: {
+      "fc:frame": JSON.stringify(frameData),
+    },
+  };
 }
 
-// Define types for the chat message payload
-interface ChatMessage {
-  name: string;
-  text: string;
-  is_user: boolean;
-}
-
-const Home: React.FC<HomeProps> = ({ params }) => {
-  const resolvedParams = use(params);
-  const { state } = useRoom({
-    onLeave: () => {
-      push(`/${resolvedParams.roomId}/lobby`);
-    },
-  });
-  const { push } = useRouter();
-  const [requestedPeerId, setRequestedPeerId] = useState<string>("");
-  const { showAcceptRequest, setShowAcceptRequest } = useStore();
-  const addChatMessage = useStore((state) => state.addChatMessage);
-  const addRequestedPeers = useStore((state) => state.addRequestedPeers);
-  const requestedPeers = useStore((state) => state.requestedPeers);
-  const isChatOpen = useStore((state) => state.isChatOpen);
-  const { peerId } = useLocalPeer<PeerMetadata>();
-
-  // Handle "requestToSpeak" data messages
-  const handleRequestToSpeak = useCallback(
-    (payload: string, from: string, label?: string) => {
-      if (label === "requestToSpeak") {
-        setShowAcceptRequest(true);
-        setRequestedPeerId(from);
-        addRequestedPeers(from);
-        setTimeout(() => {
-          setShowAcceptRequest(false);
-        }, 5000);
-      }
-    },
-    [setShowAcceptRequest, setRequestedPeerId, addRequestedPeers]
-  );
-
-  // Handle "chat" data messages
-  const handleChatMessage = useCallback(
-    (payload: string, from: string, label?: string) => {
-      if (label === "chat" && from !== peerId) {
-        const messagePayload: { name: string; message: string } =
-          JSON.parse(payload);
-        const newChatMessage: ChatMessage = {
-          name: messagePayload.name,
-          text: messagePayload.message,
-          is_user: false,
-        };
-        addChatMessage(newChatMessage);
-      }
-    },
-    [addChatMessage, peerId]
-  );
-
-  // Set up data message listeners
-  useDataMessage({
-    onMessage: handleRequestToSpeak,
-  });
-
-  useDataMessage({
-    onMessage: handleChatMessage,
-  });
-
-  // Redirect to lobby if room state is idle
-  useEffect(() => {
-    if (state === "idle") {
-      push(`/${resolvedParams.roomId}/lobby`);
-    }
-  }, [state, push, resolvedParams.roomId]);
-
-  // Hide the accept request modal if the peer is no longer in the requested list
-  useEffect(() => {
-    if (!requestedPeers.includes(requestedPeerId)) {
-      setShowAcceptRequest(false);
-    }
-  }, [requestedPeers, requestedPeerId, setShowAcceptRequest]);
-
-  return (
-    <section className="bg-audio flex min-h-screen flex-col items-center justify-center w-full relative text-slate-100 md:flex-row">
-      <div className="flex flex-col w-full items-center md:flex-row">
-        <GridLayout />
-        <Sidebar />
-        <div className="fixed right-4 bottom-24 md:right-6 md:bottom-20">
-          {showAcceptRequest && <AcceptRequest peerId={requestedPeerId} />}
-        </div>
-      </div>
-      {isChatOpen && <Chat />}
-      <BottomBar />
-      <Prompts />
-    </section>
-  );
+const Home: React.FC<HomeProps> = async ({ params }) => {
+  return <SpacePage roomId={(await params).roomId} />;
 };
 
 export default React.memo(Home);

@@ -84,7 +84,7 @@ const Lobby = (props: TLobboyProps) => {
 
   return (
     <main className="flex h-screen flex-col items-center justify-center bg-lobby text-slate-100">
-      <div className="flex flex-col items-center justify-center gap-4 w-[26.25rem] px-4">
+      <div className="flex flex-col items-center justify-center gap-4 w-[26.25rem] ">
         <div className="relative text-center flex items-center justify-center w-fit mx-auto">
           <Image
             src={avatarUrl}
@@ -147,7 +147,7 @@ const Lobby = (props: TLobboyProps) => {
           </FeatCommon>
         </div>
         <div className="flex items-center w-full flex-col ">
-          <div className="flex flex-col justify-center w-full gap-1">
+          <div className="flex flex-col justify-center w-full gap-1 px-4">
             Set a display name
             <div className="flex w-full items-center rounded-[10px] border px-3 text-slate-300 outline-none border-zinc-800 backdrop-blur-[400px] focus-within:border-slate-600 gap-">
               <div className="mr-2">
@@ -173,7 +173,7 @@ const Lobby = (props: TLobboyProps) => {
             </div>
           </div>
         </div>
-        <div className="flex items-center w-full">
+        <div className="flex items-center w-full px-4">
           <Button
             className="flex items-center justify-center p-2 mt-2 w-full"
             onClick={handleStartSpaces}

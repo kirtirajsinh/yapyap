@@ -1,4 +1,3 @@
-import { geRoomMetaData } from '@/utils/helpers';
 import { AccessToken, Role } from '@huddle01/server-sdk/auth';
 
 export const dynamic = 'force-dynamic';
@@ -48,8 +47,16 @@ export async function GET(request: Request) {
   const name = searchParams.get('name');
   const walletAddress = searchParams.get('walletAddress');
   const avatarUrl = searchParams.get('avatarUrl');
+  const appUrl = process.env.NEXT_PUBLIC_URL;
 
-  const roomMetaData = await geRoomMetaData(roomId ?? '');
+  const getRoomData = await fetch(`${appUrl}/api/get-room-metadata` + `?roomId=${roomId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const roomMetaData = await getRoomData.json();
   console.log('roomMetaData', roomMetaData);
 
   const isHost = roomMetaData?.metadata?.hostWallet === walletAddress;
