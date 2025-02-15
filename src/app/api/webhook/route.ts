@@ -56,7 +56,7 @@ export async function POST(request: Request) {
                 await setUserNotificationDetails(fid, event.notificationDetails);
                 const addNotif = await sendFrameNotification({
                     fid,
-                    title: "Welcome,now you got a space to Yap",
+                    title: "Welcome, now you got a space to Yap",
                     body: "You'll be notified when we have updates",
                 });
                 console.log(addNotif, "addNotif");
