@@ -1,0 +1,1 @@
+export const CoverImageUrl = "https://pub-e8971eb4496f4e9da48437207c094a3c.r2.dev"
