@@ -45,9 +45,14 @@ const WalletConnect = () => {
 
               if (chain.unsupported) {
                 return (
-                  <button onClick={openChainModal} type="button">
+                  <Button
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={openChainModal}
+                    type="button"
+                    variant="destructive"
+                  >
                     Wrong network
-                  </button>
+                  </Button>
                 );
               }
 
@@ -55,9 +60,6 @@ const WalletConnect = () => {
                 <div style={{ display: "flex", gap: 12 }}>
                   <Button onClick={openAccountModal} type="button">
                     {account.displayName}
-                    {account.displayBalance
-                      ? ` (${account.displayBalance})`
-                      : ""}
                   </Button>
                 </div>
               );
