@@ -1,19 +1,23 @@
-import { NestedPeerListIcons, PeerListIcons } from '@/assets/PeerListIcons';
-import Dropdown from '@/components/common/Dropdown';
-import { cn, getFallbackAvatar } from '@/utils/helpers';
-import Image from 'next/image';
-import React, { useState, useEffect } from 'react';
-import HostData from '../PeerRole/HostData';
-import CoHostData from '../PeerRole/CoHostData';
-import SpeakerData from '../PeerRole/SpeakerData';
-import ListenersData from '../PeerRole/ListenersData';
+import { NestedPeerListIcons, PeerListIcons } from "@/assets/PeerListIcons";
+import { cn, getFallbackAvatar } from "@/utils/helpers";
+import Image from "next/image";
+import React, { useState, useEffect } from "react";
+import HostData from "../PeerRole/HostData";
+import CoHostData from "../PeerRole/CoHostData";
+import SpeakerData from "../PeerRole/SpeakerData";
+import ListenersData from "../PeerRole/ListenersData";
 import {
   useDataMessage,
   useRemoteAudio,
   useRemotePeer,
-} from '@huddle01/react/hooks';
-import useStore from '@/store/slices';
-import { Role } from '@huddle01/server-sdk/auth';
+} from "@huddle01/react/hooks";
+import useStore from "@/store/slices";
+import { Role } from "@huddle01/server-sdk/auth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface PeerMetaDatProps {
   isRequested?: boolean;
@@ -44,7 +48,7 @@ const PeerMetaData: React.FC<PeerMetaDatProps> = ({
   const removeRequestedPeers = useStore((state) => state.removeRequestedPeers);
 
   return (
-    <div className={cn(className, 'flex items-center justify-between w-full')}>
+    <div className={cn(className, "flex items-center justify-between w-full")}>
       <div className="flex items-center gap-2">
         <Image
           src={metadata?.avatarUrl ?? getFallbackAvatar()}
@@ -67,7 +71,7 @@ const PeerMetaData: React.FC<PeerMetaDatProps> = ({
             }
           }}
           onAccept={() => {
-            if (peerId && role && ['host', 'coHost'].includes(role)) {
+            if (peerId && role && ["host", "coHost"].includes(role)) {
               updateRole(Role.SPEAKER);
               removeRequestedPeers(peerId);
             }
@@ -85,12 +89,15 @@ const PeerMetaData: React.FC<PeerMetaDatProps> = ({
               ? NestedPeerListIcons.active.mic
               : NestedPeerListIcons.inactive.mic}
           </button>
-          <Dropdown
-            triggerChild={<div>{NestedPeerListIcons.inactive.more}</div>}
-            align="end"
-          >
-            {role && RoleData[role as keyof typeof RoleData]}
-          </Dropdown>{' '}
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button>{NestedPeerListIcons.inactive.more}</button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {role && RoleData[role as keyof typeof RoleData]}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       )}
     </div>

@@ -5,12 +5,22 @@ import BottomBar from "@/components/BottomBar/BottomBar";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import GridLayout from "@/components/GridLayout/GridLayout";
 import Prompts from "@/components/common/Prompts";
-import { useRoom, useLocalPeer, useDataMessage } from "@huddle01/react/hooks";
+import {
+  useRoom,
+  useLocalPeer,
+  useDataMessage,
+  useActivePeers,
+  usePeerIds,
+} from "@huddle01/react/hooks";
 import { useRouter } from "next/navigation";
 import AcceptRequest from "@/components/Modals/AcceptRequest";
 import useStore from "@/store/slices";
 import Chat from "@/components/Chat/Chat";
-import { useAccount } from "wagmi";
+// import { useAccount } from "wagmi";
+import { useQuery } from "@tanstack/react-query";
+import { useUserStore } from "@/hooks/UserStore";
+import toast from "react-hot-toast";
+import { getFallbackAvatar } from "@/utils/helpers";
 
 // Define types for the component props
 interface HomeProps {
@@ -32,11 +42,31 @@ interface ChatMessage {
   is_user: boolean;
 }
 
+interface User {
+  displayName: string | null;
+  pfpUrl: string | null;
+  username: string | null;
+}
+
+const generateToken = async (roomId: string, user: User | null) => {
+  if (!roomId) {
+    return null;
+  }
+
+  const response = await fetch(
+    `/token?roomId=${roomId}&name=${user?.username ?? "GUEST"}&avatarUrl=${
+      user?.pfpUrl ?? getFallbackAvatar()
+    }`
+  );
+  const token = await response.text();
+  return token;
+};
+
 const Home: React.FC<HomeProps> = ({ params }) => {
   const resolvedParams = use(params);
   const { state } = useRoom({
     onLeave: () => {
-      push(`/${resolvedParams.roomId}/lobby`);
+      push(`/`);
     },
   });
   const { push } = useRouter();
@@ -46,7 +76,34 @@ const Home: React.FC<HomeProps> = ({ params }) => {
   const addRequestedPeers = useStore((state) => state.addRequestedPeers);
   const requestedPeers = useStore((state) => state.requestedPeers);
   const isChatOpen = useStore((state) => state.isChatOpen);
+
   const { peerId } = useLocalPeer<PeerMetadata>();
+  const { user } = useUserStore();
+  const { joinRoom } = useRoom();
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["fetchData", resolvedParams.roomId],
+    queryFn: () => generateToken(resolvedParams.roomId, user),
+    enabled: !!resolvedParams.roomId && state !== "connected" && !!user,
+    gcTime: 0, // Disable caching (formerly cacheTime)
+    staleTime: 0, // Always consider data stale
+  });
+
+  // Join the room if the token is fetched
+  useEffect(() => {
+    if (data && state !== "connected") {
+      joinRoom({
+        roomId: resolvedParams.roomId,
+        token: data,
+      });
+    }
+  }, [data, joinRoom, resolvedParams.roomId, state]);
+
+  // Redirect to lobby if room state is idle
+  useEffect(() => {
+    if (state === "idle") {
+      push(`/${resolvedParams.roomId}`);
+    }
+  }, [state, push, resolvedParams.roomId]);
 
   // Handle "requestToSpeak" data messages
   const handleRequestToSpeak = useCallback(
@@ -89,20 +146,19 @@ const Home: React.FC<HomeProps> = ({ params }) => {
     onMessage: handleChatMessage,
   });
 
-  // Redirect to lobby if room state is idle
-  useEffect(() => {
-    if (state === "idle") {
-      push(`/${resolvedParams.roomId}/lobby`);
-    }
-  }, [state, push, resolvedParams.roomId]);
-
-  // Hide the accept request modal if the peer is no longer in the requested list
   useEffect(() => {
     if (!requestedPeers.includes(requestedPeerId)) {
       setShowAcceptRequest(false);
     }
   }, [requestedPeers, requestedPeerId, setShowAcceptRequest]);
 
+  if (isLoading) {
+    return (
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div className="text-white text-2xl font-semibold">Joining Room...</div>
+      </div>
+    );
+  }
   return (
     <section className="bg-audio flex min-h-screen flex-col items-center justify-center w-full relative text-slate-100 md:flex-row">
       <div className="flex flex-col w-full items-center md:flex-row">
@@ -118,5 +174,4 @@ const Home: React.FC<HomeProps> = ({ params }) => {
     </section>
   );
 };
-
 export default React.memo(Home);

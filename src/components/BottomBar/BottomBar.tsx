@@ -7,7 +7,6 @@ import Strip from "../Sidebar/Peers/PeerRole/Strip";
 // Assets
 import { BasicIcons, NestedBasicIcons } from "@/assets/BasicIcons";
 import { cn, getFallbackAvatar } from "@/utils/helpers";
-import Dropdown from "../common/Dropdown";
 import EmojiTray from "../EmojiTray/EmojiTray";
 import {
   useLocalPeer,
@@ -22,9 +21,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Button } from "../ui/button";
-import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer";
-import Sidebar from "../Sidebar/Sidebar";
+import { Role } from "@huddle01/server-sdk/auth";
 
 type BottomBarProps = {};
 
@@ -65,20 +62,31 @@ const BottomBar: React.FC<BottomBarProps> = () => {
   }>();
 
   const [showLeaveDropDown, setShowLeaveDropDown] = useState<boolean>(false);
-
+  const { peerIds: speakerPeerIds } = usePeerIds({ roles: [Role.SPEAKER] });
   return (
     <div className="fixed bottom-0 w-full flex flex-col sm:flex-row items-center px-3 sm:px-4 md:px-10 justify-between py-3 bg-custom-3 md:bg-transparent z-50">
       {/* Bottom Bar Left */}
-      <div className="mb-2 sm:mb-0 w-full sm:w-auto flex justify-center sm:justify-start">
+      <div className="mb-2 sm:mb-0 w-full sm:w-auto flex self-center sm:justify-start">
         {role === "host" || role === "coHost" || role === "speaker" ? (
           <div className="mr-auto flex items-center justify-between gap-2 sm:gap-3 w-32 sm:w-44" />
         ) : (
           <OutlineButton
-            className="mr-auto flex items-center justify-between gap-2 sm:gap-3 text-xs sm:text-sm"
-            onClick={() => setPromptView("request-to-speak")}
+            className={`mr-auto flex items-center justify-between gap-2 sm:gap-3 text-xs sm:text-sm hidden-${!speakerPeerIds}`}
+            onClick={async () => {
+              if (speakerPeerIds.length <= 2) {
+                try {
+                  await updateRole({ role: Role.SPEAKER });
+                } catch (e) {
+                  toast.error("Waiting to join room");
+                  console.log(e);
+                }
+              } else {
+                setPromptView("request-to-speak");
+              }
+            }}
           >
             {BasicIcons.requestToSpeak}
-            <div className="hidden sm:block">Request to speak</div>
+            {speakerPeerIds.length <= 2 ? "Start Speaking" : "Request to speak"}
           </OutlineButton>
         )}
       </div>
@@ -88,16 +96,16 @@ const BottomBar: React.FC<BottomBarProps> = () => {
         {role !== "listener" &&
           (!isAudioOn ? (
             <button
-              onClick={() => {
-                enableAudio();
+              onClick={async () => {
+                await enableAudio();
               }}
             >
               {NestedBasicIcons.inactive.mic}
             </button>
           ) : (
             <button
-              onClick={() => {
-                disableAudio();
+              onClick={async () => {
+                await disableAudio();
               }}
             >
               {NestedBasicIcons.active.mic}
@@ -107,7 +115,7 @@ const BottomBar: React.FC<BottomBarProps> = () => {
           open={isOpen}
           onOpenChange={() => setIsOpen((prev) => !prev)}
         >
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger>
             <button>{BasicIcons.avatar}</button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -134,30 +142,34 @@ const BottomBar: React.FC<BottomBarProps> = () => {
             ? NestedPeerListIcons.active.hand
             : NestedPeerListIcons.inactive.hand}
         </button>
-        <Dropdown
-          triggerChild={BasicIcons.leave}
+        <DropdownMenu
           open={showLeaveDropDown}
           onOpenChange={() => setShowLeaveDropDown((prev) => !prev)}
         >
-          {role === "host" && (
+          <DropdownMenuTrigger>
+            <button>{BasicIcons.leave}</button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {role === "host" && (
+              <Strip
+                type="close"
+                title="End spaces for all"
+                variant="danger"
+                onClick={async () => {
+                  await closeRoom();
+                }}
+              />
+            )}
             <Strip
-              type="close"
-              title="End spaces for all"
+              type="leave"
+              title="Leave the space"
               variant="danger"
               onClick={() => {
-                closeRoom();
+                leaveRoom();
               }}
             />
-          )}
-          <Strip
-            type="leave"
-            title="Leave the space"
-            variant="danger"
-            onClick={() => {
-              leaveRoom();
-            }}
-          />
-        </Dropdown>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Bottom Bar Right */}

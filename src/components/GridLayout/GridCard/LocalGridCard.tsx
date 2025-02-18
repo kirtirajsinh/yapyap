@@ -37,11 +37,13 @@ const LocalGridCard: FC = () => {
     },
   });
 
-  console.log(dominantSpeakerId, "activePeerIds", activePeerIds);
+  // console.log(dominantSpeakerId, "activePeerIds", activePeerIds);
 
   return (
     <div
-      className={`relative flex items-center justify-center flex-col transition-all `}
+      className={`relative flex items-center justify-center flex-col transition-all ${
+        dominantSpeakerId === localPeerId ? "border-2 border-red-500" : ""
+      }`}
     >
       <Image
         src={metadata?.avatarUrl || getFallbackAvatar()}

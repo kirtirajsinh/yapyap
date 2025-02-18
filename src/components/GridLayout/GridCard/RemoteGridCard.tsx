@@ -31,9 +31,6 @@ const GridCard: React.FC<GridCardProps> = ({ peerId }) => {
     isHandRaised: boolean;
   }>({ peerId });
 
-  const { peerIds } = usePeerIds();
-  console.log(peerIds, "peerIds");
-
   const { stream, isAudioOn } = useRemoteAudio({
     peerId,
     onPlayable: () => {
@@ -53,8 +50,6 @@ const GridCard: React.FC<GridCardProps> = ({ peerId }) => {
       }
     },
   });
-
-  console.log(dominantSpeakerId, "activePeerIds", activePeerIds);
 
   return (
     <div

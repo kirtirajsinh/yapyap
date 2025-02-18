@@ -8,8 +8,7 @@ interface RoomDetails {
         roomId: string;
     };
 }
-export const createRoom = async (title: string, hostWallet: string) => {
-    console.log("title", title, hostWallet, "hostWallet");
+export const createRoom = async (title: string, hostWallet: string | null) => {
     try {
         const api = new API({
             apiKey: process.env.API_KEY!,

@@ -3,8 +3,12 @@ import "./globals.css";
 
 // Components
 import Navbar from "@/components/common/Navbar";
-import HuddleContextProvider from "@/components/ClientComponents/HuddleContextProvider";
 import { Manrope } from "next/font/google";
+import dynamic from "next/dynamic";
+// import huddleContext Provider dynamica
+const HuddleContextProvider = dynamic(
+  () => import("@/components/ClientComponents/HuddleContextProvider")
+);
 
 const manrope = Manrope({
   variable: "--font-jersey-10",
