@@ -45,6 +45,11 @@ function FarcasterFrameProvider({ children }: PropsWithChildren) {
       const frameuser = await FrameSDK.context;
       console.log("Frame Action ready", frameuser?.user);
 
+      if (frameuser?.client?.added === false) {
+        console.log("FrameSDK.context", frameuser?.client?.added);
+        await FrameSDK.actions.addFrame();
+      }
+
       if (frameuser?.user) {
         setUser({
           displayName: frameuser?.user.displayName || "",
@@ -73,13 +78,13 @@ const queryClient = new QueryClient();
 
 const Provider = ({ children }: { children: React.ReactNode }) => {
   return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
-          <FarcasterFrameProvider>{children}</FarcasterFrameProvider>
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+    // <WagmiProvider config={config}>
+    <QueryClientProvider client={queryClient}>
+      {/* <RainbowKitProvider> */}
+      <FarcasterFrameProvider>{children}</FarcasterFrameProvider>
+      {/* </RainbowKitProvider> */}
+    </QueryClientProvider>
+    // </WagmiProvider>
   );
 };
 
