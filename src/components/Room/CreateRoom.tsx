@@ -6,45 +6,44 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { createRoom } from "@/app/api/actions/createroom";
 import { useRouter } from "next/navigation";
-import { useAccount } from "wagmi";
+// import { useAccount } from "wagmi";
 import { toast } from "react-hot-toast";
 import DialogOrDrawerWrapper from "../common/DialogOrDrawerWrapper";
 
 const CreateRoom = () => {
   const [roomName, setRoomName] = useState("");
   const [roomImage, setRoomImage] = useState<File | null>(null);
-  const { address, isConnected } = useAccount();
+  // const { address, isConnected } = useAccount();
   const router = useRouter();
   const [isCreating, setIsCreating] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleCreateRoom = async (roomName: string) => {
-    if (!isConnected || !address) {
-      console.log("Not connected");
-      toast.error("Please connect your wallet first!");
-      return;
-    }
+    // if (!isConnected || !address) {
+    //   console.log("Not connected");
+    //   toast.error("Please connect your wallet first!");
+    //   return;
+    // }
     // Handle room creation logic here
     console.log("Creating room:", roomName);
     setIsCreating(true);
     try {
-      if (address) {
-        const roomId = await createRoom(roomName, address);
+      // if (address) {
+      const roomId = await createRoom(roomName, null);
 
-        console.log("room", roomId);
+      console.log("room", roomId);
 
-        if (roomId) {
-          await Promise.all([
-            router.push(`/${roomId}/lobby`),
-            // Add a small delay to ensure the navigation has started
-            new Promise((resolve) => setTimeout(resolve, 100)),
-          ]);
+      if (roomId) {
+        await Promise.all([
+          router.push(`/${roomId}`),
+          // Add a small delay to ensure the navigation has started
+          new Promise((resolve) => setTimeout(resolve, 100)),
+        ]);
 
-          // Close the dialog after successful creation
-          setIsOpen(false);
-          setIsCreating(false); // Reset the state on completion
-        }
+        // Close the dialog after successful creation
+        setIsCreating(false); // Reset the state on completion
       }
+      // }
     } catch (error) {
       console.log(error);
       toast.error("Failed to create room. Please try again.");
@@ -107,14 +106,9 @@ const CreateRoom = () => {
   return (
     <>
       <Button
-        variant="outline"
         disabled={isCreating}
         onClick={() => {
-          if (!isConnected) {
-            toast.error("Please connect your wallet first!");
-            return;
-          }
-          setIsOpen(true);
+          router.push(`/${process.env.NEXT_PUBLIC_ROOM_ID}`);
         }}
       >
         Start Yapping
