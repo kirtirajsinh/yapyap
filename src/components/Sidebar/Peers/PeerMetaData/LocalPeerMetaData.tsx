@@ -1,15 +1,19 @@
-import { NestedPeerListIcons, PeerListIcons } from '@/assets/PeerListIcons';
-import Dropdown from '@/components/common/Dropdown';
-import { cn, getFallbackAvatar } from '@/utils/helpers';
-import Image from 'next/image';
-import HostData from '../PeerRole/HostData';
-import CoHostData from '../PeerRole/CoHostData';
-import SpeakerData from '../PeerRole/SpeakerData';
-import ListenersData from '../PeerRole/ListenersData';
-import { useLocalAudio, useLocalPeer } from '@huddle01/react/hooks';
-import useStore from '@/store/slices';
-import { Role } from '@huddle01/server-sdk/auth';
-import { memo } from 'react';
+import { NestedPeerListIcons, PeerListIcons } from "@/assets/PeerListIcons";
+import { cn, getFallbackAvatar } from "@/utils/helpers";
+import Image from "next/image";
+import HostData from "../PeerRole/HostData";
+import CoHostData from "../PeerRole/CoHostData";
+import SpeakerData from "../PeerRole/SpeakerData";
+import ListenersData from "../PeerRole/ListenersData";
+import { useLocalAudio, useLocalPeer } from "@huddle01/react/hooks";
+import useStore from "@/store/slices";
+import { Role } from "@huddle01/server-sdk/auth";
+import { memo } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface PeerMetaDatProps {
   isRequested?: boolean;
@@ -43,7 +47,7 @@ const PeerMetaData: React.FC<PeerMetaDatProps> = ({
   const removeRequestedPeers = useStore((state) => state.removeRequestedPeers);
 
   return (
-    <div className={cn(className, 'flex items-center justify-between w-full')}>
+    <div className={cn(className, "flex items-center justify-between w-full")}>
       <div className="flex items-center gap-2">
         <Image
           src={metadata?.avatarUrl ?? getFallbackAvatar()}
@@ -66,7 +70,7 @@ const PeerMetaData: React.FC<PeerMetaDatProps> = ({
             }
           }}
           onAccept={() => {
-            if (peerId && role && ['host', 'coHost'].includes(role)) {
+            if (peerId && role && ["host", "coHost"].includes(role)) {
               updateRole({ role: Role.SPEAKER });
               removeRequestedPeers(peerId);
             }
@@ -78,7 +82,7 @@ const PeerMetaData: React.FC<PeerMetaDatProps> = ({
             onClick={() => {
               // if (peerId === localPeerId) {
               updateMetadata({
-                displayName: metadata?.displayName ?? 'Guest',
+                displayName: metadata?.displayName ?? "Guest",
                 avatarUrl: metadata?.avatarUrl ?? getFallbackAvatar(),
                 isHandRaised: !metadata?.isHandRaised,
               });
@@ -91,7 +95,7 @@ const PeerMetaData: React.FC<PeerMetaDatProps> = ({
           </button>
           <button
             onClick={() => {
-              if (role && ['host', 'coHost', 'speaker'].includes(role)) {
+              if (role && ["host", "coHost", "speaker"].includes(role)) {
                 isAudioOn ? disableAudio() : enableAudio();
               }
             }}
@@ -101,12 +105,14 @@ const PeerMetaData: React.FC<PeerMetaDatProps> = ({
               : NestedPeerListIcons.inactive.mic}
           </button>
 
-          <Dropdown
-            triggerChild={<div>{NestedPeerListIcons.inactive.more}</div>}
-            align="end"
-          >
-            {role && RoleData[role as keyof typeof RoleData]}
-          </Dropdown>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button>{NestedPeerListIcons.inactive.more}</button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {role && RoleData[role as keyof typeof RoleData]}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       )}
     </div>
