@@ -1,12 +1,17 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Metadata } from "next";
 
-type Props = {
-  params: { roomId: string };
-  children: React.ReactNode;
+// Define the params type explicitly
+type RoomLayoutProps = {
+  children: ReactNode;
+  params: Promise<{
+    roomId: string;
+  }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: RoomLayoutProps): Promise<Metadata> {
   // optionally access and extend (rather than replace) parent metadata
   const { roomId } = await params;
   console.log(roomId, "params roomid from lobby");
@@ -37,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           title: "Start Yappin",
           action: {
             type: "launch_frame",
-            name: "Yap Yap Yap",
+            name: "Yapster",
             url: `${appUrl}/${roomId}`,
             splashImageUrl:
               "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/yap%20logo.png",
@@ -49,14 +54,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const Layout = ({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { roomid: string };
-}) => {
-  return <>{children}</>;
+const Layout = ({ children, params }: RoomLayoutProps) => {
+  return <div>{children}</div>;
 };
 
 export default Layout;
