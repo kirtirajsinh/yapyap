@@ -1,9 +1,5 @@
 import React from "react";
-import { cn } from "@/utils/helpers";
-import { Inter } from "next/font/google";
 import { Metadata } from "next";
-
-const inter = Inter({ subsets: ["latin"] });
 
 type Props = {
   params: { roomId: string };
@@ -41,8 +37,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           title: "Start Yappin",
           action: {
             type: "launch_frame",
-            name: "Yapster",
-            url: `${appUrl}/${roomId}/lobby`,
+            name: "Yap Yap Yap",
+            url: `${appUrl}/${roomId}`,
             splashImageUrl:
               "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/yap%20logo.png",
             splashBackgroundColor: "#000000",
@@ -60,11 +56,7 @@ const Layout = ({
   children: React.ReactNode;
   params: { roomid: string };
 }) => {
-  return (
-    <div className={cn("min-h-screen relative font-inter", inter.className)}>
-      {children}
-    </div>
-  );
+  return <>{children}</>;
 };
 
 export default Layout;
