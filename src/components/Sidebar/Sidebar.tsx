@@ -29,7 +29,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       <Header
-        title="Peers"
+        title="frens"
         icon={BasicIcons.peers}
         onClose={() => setSidebarView("close")}
       />
@@ -52,10 +52,10 @@ const Sidebar: React.FC<SidebarProps> = () => {
           aria-describedby="drawer-description"
         >
           <DrawerHeader>
-            <DrawerTitle className="">Yap</DrawerTitle>
+            <DrawerTitle className="">Yap Yap Yap</DrawerTitle>
           </DrawerHeader>
           <DrawerDescription className="text-center">
-            Connected Peers
+            Connected Frens
           </DrawerDescription>
           <div className="w-full h-full p-2">
             <SidebarContent />
