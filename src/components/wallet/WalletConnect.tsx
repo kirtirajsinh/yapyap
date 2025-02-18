@@ -26,7 +26,7 @@ const WalletConnect = () => {
         return (
           <div
             {...(!ready && {
-              "aria-hidden": true,
+              // "aria-hidden": true,
               style: {
                 opacity: 0,
                 pointerEvents: "none",
