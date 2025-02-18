@@ -10,8 +10,8 @@
 } */
 
 .maskAvatar {
-  -webkit-mask-image: url("/images/Mask.svg");
-  mask-image: url("/images/Mask.svg");
+  -webkit-mask-image: url("/images/CircleMask.svg");
+  mask-image: url("/images/CircleMask.svg");
   -webkit-mask-size: contain;
   mask-size: contain;
   -webkit-mask-repeat: no-repeat;
