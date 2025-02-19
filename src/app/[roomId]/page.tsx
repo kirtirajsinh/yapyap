@@ -52,7 +52,7 @@ const generateToken = async (roomId: string, user: User | null) => {
   if (!roomId) {
     return null;
   }
-
+  console.log("creating a token with roomId");
   const response = await fetch(
     `/token?roomId=${roomId}&name=${user?.username ?? "GUEST"}&avatarUrl=${
       user?.pfpUrl ?? getFallbackAvatar()
@@ -96,7 +96,11 @@ const Home: React.FC<HomeProps> = ({ params }) => {
         token: data,
       });
     }
-  }, [data, joinRoom, resolvedParams.roomId, state]);
+    if (error) {
+      toast.error("Error fetching token");
+      console.log(error);
+    }
+  }, [data, error, joinRoom, resolvedParams.roomId, state]);
 
   // Redirect to lobby if room state is idle
   useEffect(() => {
@@ -152,7 +156,7 @@ const Home: React.FC<HomeProps> = ({ params }) => {
     }
   }, [requestedPeers, requestedPeerId, setShowAcceptRequest]);
 
-  if (isLoading) {
+  if (state !== "connected") {
     return (
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
         <div className="text-white text-2xl font-semibold">Joining Room...</div>
