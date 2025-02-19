@@ -82,7 +82,7 @@ const Home: React.FC<HomeProps> = ({ params }) => {
     if (token && state !== "connected") {
       joinRoom({
         roomId: resolvedParams.roomId,
-        token: token,
+        token,
       });
     }
     if (error) {
