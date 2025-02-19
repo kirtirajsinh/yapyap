@@ -79,9 +79,10 @@ const Home: React.FC<HomeProps> = ({ params }) => {
     );
     const token = await response.text();
 
-    console.log("token", token, "state", state);
+    console.log("token", token, "state", state, roomId, "roomId");
 
     if (token && state !== "connected") {
+      console.log("token", token, "state", state);
       joinRoom({
         roomId: roomId,
         token,
