@@ -79,9 +79,12 @@ const Home: React.FC<HomeProps> = ({ params }) => {
     );
     const token = await response.text();
 
+    console.log("token", token, "state", state, roomId, "roomId");
+
     if (token && state !== "connected") {
+      console.log("token", token, "state", state);
       joinRoom({
-        roomId: resolvedParams.roomId,
+        roomId: roomId,
         token,
       });
     }
@@ -99,12 +102,12 @@ const Home: React.FC<HomeProps> = ({ params }) => {
     staleTime: 0, // Always consider data stale
   });
 
-  // Redirect to lobby if room state is idle
-  useEffect(() => {
-    if (state === "idle") {
-      push(`/${resolvedParams.roomId}`);
-    }
-  }, [state, push, resolvedParams.roomId]);
+  // // Redirect to lobby if room state is idle
+  // useEffect(() => {
+  //   if (state === "idle") {
+  //     push(`/${resolvedParams.roomId}`);
+  //   }
+  // }, [state, push, resolvedParams.roomId]);
 
   // Handle "requestToSpeak" data messages
   const handleRequestToSpeak = useCallback(
