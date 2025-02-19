@@ -2,7 +2,7 @@
 import "./globals.css";
 
 // Components
-import Navbar from "@/components/common/Navbar";
+import Navbar from "@/components/Nav/Navbar";
 import { Manrope } from "next/font/google";
 import dynamic from "next/dynamic";
 // import huddleContext Provider dynamica
