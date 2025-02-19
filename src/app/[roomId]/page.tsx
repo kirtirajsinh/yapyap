@@ -48,20 +48,6 @@ interface User {
   username: string | null;
 }
 
-const generateToken = async (roomId: string, user: User | null) => {
-  if (!roomId) {
-    return null;
-  }
-  console.log("creating a token with roomId");
-  const response = await fetch(
-    `/token?roomId=${roomId}&name=${user?.username ?? "GUEST"}&avatarUrl=${
-      user?.pfpUrl ?? getFallbackAvatar()
-    }`
-  );
-  const token = await response.text();
-  return token;
-};
-
 const Home: React.FC<HomeProps> = ({ params }) => {
   const resolvedParams = use(params);
   const { state } = useRoom({
@@ -80,6 +66,31 @@ const Home: React.FC<HomeProps> = ({ params }) => {
   const { peerId } = useLocalPeer<PeerMetadata>();
   const { user } = useUserStore();
   const { joinRoom } = useRoom();
+
+  const generateToken = async (roomId: string, user: User | null) => {
+    if (!roomId) {
+      return null;
+    }
+    console.log("creating a token with roomId");
+    const response = await fetch(
+      `/token?roomId=${roomId}&name=${user?.username ?? "GUEST"}&avatarUrl=${
+        user?.pfpUrl ?? getFallbackAvatar()
+      }`
+    );
+    const token = await response.text();
+
+    if (token && state !== "connected") {
+      joinRoom({
+        roomId: resolvedParams.roomId,
+        token: token,
+      });
+    }
+    if (error) {
+      toast.error("Error fetching token");
+      console.log(error);
+    }
+    return token;
+  };
   const { data, error, isLoading } = useQuery({
     queryKey: ["fetchData", resolvedParams.roomId],
     queryFn: () => generateToken(resolvedParams.roomId, user),
@@ -87,20 +98,6 @@ const Home: React.FC<HomeProps> = ({ params }) => {
     gcTime: 0, // Disable caching (formerly cacheTime)
     staleTime: 0, // Always consider data stale
   });
-
-  // Join the room if the token is fetched
-  useEffect(() => {
-    if (data && state !== "connected") {
-      joinRoom({
-        roomId: resolvedParams.roomId,
-        token: data,
-      });
-    }
-    if (error) {
-      toast.error("Error fetching token");
-      console.log(error);
-    }
-  }, [data, error, joinRoom, resolvedParams.roomId, state]);
 
   // Redirect to lobby if room state is idle
   useEffect(() => {
