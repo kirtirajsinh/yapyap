@@ -34,7 +34,7 @@ export const config = createConfig({
 });
 
 function FarcasterFrameProvider({ children }: PropsWithChildren) {
-  const { setUser } = useUserStore();
+  const { setUser, setClient } = useUserStore();
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
 
   useEffect(() => {
@@ -43,11 +43,12 @@ function FarcasterFrameProvider({ children }: PropsWithChildren) {
       // Add the FrameSDK.actions.ready() otherwise your app will get stuck in a loading state i.e. a Splash screen.
       FrameSDK.actions.ready();
       const frameuser = await FrameSDK.context;
-      console.log("Frame Action ready", frameuser?.user);
+      console.log("Frame Action ready", frameuser);
 
-      if (frameuser?.client?.added === false) {
-        console.log("FrameSDK.context", frameuser?.client?.added);
-        await FrameSDK.actions.addFrame();
+      if (frameuser?.client) {
+        setClient({
+          added: frameuser?.client.added,
+        });
       }
 
       if (frameuser?.user) {
