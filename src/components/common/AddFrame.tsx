@@ -20,7 +20,7 @@ const AddFrame = () => {
       setLoading(true);
       const result = await FrameSDK.actions.addFrame();
       if (result) {
-        toast.success("Added frame to join waitlist");
+        toast.success("Frame Added ");
       } else {
         toast.error("Error adding frame");
       }
