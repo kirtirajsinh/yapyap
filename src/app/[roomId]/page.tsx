@@ -56,10 +56,16 @@ const generateToken = async (
   if (!roomId) {
     return null;
   }
-  console.log("creating a token with roomId");
   let token;
 
+  console.log(user, "user", state);
+
   if (state !== "connected" && state !== "connecting") {
+    console.log(
+      "creating a token with roomId",
+      user?.username ?? "GUEST",
+      user?.pfpUrl ?? getFallbackAvatar()
+    );
     const response = await fetch(
       `/token?roomId=${roomId}&name=${user?.username ?? "GUEST"}&avatarUrl=${
         user?.pfpUrl ?? getFallbackAvatar()
