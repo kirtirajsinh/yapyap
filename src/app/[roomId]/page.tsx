@@ -48,6 +48,27 @@ interface User {
   username: string | null;
 }
 
+const generateToken = async (
+  roomId: string,
+  user: User | null,
+  state: string
+) => {
+  if (!roomId) {
+    return null;
+  }
+  console.log("creating a token with roomId");
+  let token;
+
+  if (state !== "connected" && state !== "connecting") {
+    const response = await fetch(
+      `/token?roomId=${roomId}&name=${user?.username ?? "GUEST"}&avatarUrl=${
+        user?.pfpUrl ?? getFallbackAvatar()
+      }`
+    );
+    token = await response.text();
+    return token;
+  }
+};
 const Home: React.FC<HomeProps> = ({ params }) => {
   const resolvedParams = use(params);
   const { state } = useRoom({
@@ -67,36 +88,13 @@ const Home: React.FC<HomeProps> = ({ params }) => {
   const { user } = useUserStore();
   const { joinRoom } = useRoom();
 
-  const generateToken = async (roomId: string, user: User | null) => {
-    if (!roomId) {
-      return null;
-    }
-    console.log("creating a token with roomId");
-    const response = await fetch(
-      `/token?roomId=${roomId}&name=${user?.username ?? "GUEST"}&avatarUrl=${
-        user?.pfpUrl ?? getFallbackAvatar()
-      }`
-    );
-    const token = await response.text();
-
-    console.log("token", token, "state", state, roomId, "roomId");
-
-    if (token && state !== "connected") {
-      console.log("token", token, "state", state);
-      joinRoom({
-        roomId: roomId,
-        token,
-      });
-    }
-    if (error) {
-      toast.error("Error fetching token");
-      console.log(error);
-    }
-    return token;
-  };
-  const { data, error, isLoading } = useQuery({
+  const {
+    data: token,
+    error,
+    isLoading,
+  } = useQuery({
     queryKey: ["fetchData", resolvedParams.roomId],
-    queryFn: () => generateToken(resolvedParams.roomId, user),
+    queryFn: () => generateToken(resolvedParams.roomId, user, state),
     enabled: !!resolvedParams.roomId && state !== "connected" && !!user,
     gcTime: 0, // Disable caching (formerly cacheTime)
     staleTime: 0, // Always consider data stale
@@ -123,6 +121,18 @@ const Home: React.FC<HomeProps> = ({ params }) => {
     },
     [setShowAcceptRequest, setRequestedPeerId, addRequestedPeers]
   );
+
+  useEffect(() => {
+    if (token && state !== "connected" && !isLoading) {
+      joinRoom({
+        roomId: resolvedParams.roomId,
+        token,
+      });
+    }
+    if (error) {
+      console.log("error", error);
+    }
+  }, [token, error]);
 
   // Handle "chat" data messages
   const handleChatMessage = useCallback(
