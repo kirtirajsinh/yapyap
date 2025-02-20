@@ -99,5 +99,7 @@ export async function GET(request: Request) {
     token = await createToken(roomId, Role.LISTENER, name ?? 'Guest', walletAddress ?? '', avatarUrl ?? '');
   }
 
+  console.log(token, "from the token route");
+
   return new Response(token, { status: 200 });
 }
