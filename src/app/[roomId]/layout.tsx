@@ -17,6 +17,7 @@ export async function generateMetadata({
   console.log(roomId, "params roomid from lobby");
 
   const appUrl = process.env.NEXT_PUBLIC_URL;
+  const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL;
 
   return {
     title: `yapyap`,
@@ -27,7 +28,7 @@ export async function generateMetadata({
 
       images: [
         {
-          url: "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/main%20image.png",
+          url: `${imageUrl}`,
           width: 800,
           height: 600,
         },
@@ -36,8 +37,7 @@ export async function generateMetadata({
     other: {
       "fc:frame": JSON.stringify({
         version: "next",
-        imageUrl:
-          "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/main%20image.png",
+        imageUrl: `${imageUrl}`,
         button: {
           title: "Start Yappin",
           action: {
