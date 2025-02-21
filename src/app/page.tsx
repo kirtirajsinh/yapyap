@@ -4,10 +4,10 @@ import { Metadata } from "next";
 export async function generateMetadata() {
   const appUrl = process.env.NEXT_PUBLIC_URL;
   return {
-    title: "Yapster",
-    description: "YAP IT. MEME IT. PUMP IT.",
+    title: "yapyap",
+    description: "fun live Audio Spaces",
     openGraph: {
-      title: `Yapster`,
+      title: `yapyap`,
       description: `Join the Yap Space`,
 
       images: [
@@ -27,7 +27,7 @@ export async function generateMetadata() {
           title: "Start Yappin",
           action: {
             type: "launch_frame",
-            name: "Yapster",
+            name: "yapyap",
             url: `${appUrl}`,
             splashImageUrl:
               "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/yap%20logo.png",
