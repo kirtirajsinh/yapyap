@@ -2,6 +2,7 @@ export async function GET() {
 
     const appUrl = process.env.NEXT_PUBLIC_URL;
     const roomId = process.env.NEXT_PUBLIC_ROOM_ID;
+    const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL;
 
     const config = {
         "accountAssociation": {
@@ -14,7 +15,7 @@ export async function GET() {
             name: "yapyap",
             iconUrl: "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/yap%20logo.png",
             homeUrl: `${appUrl}/${roomId}`,
-            imageUrl: "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/main%20image.png",
+            imageUrl: `${imageUrl}`,
             buttonTitle: "Start Yapping",
             splashImageUrl: "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/yap%20logo.png",
             splashBackgroundColor: "#000000",

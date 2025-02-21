@@ -3,6 +3,7 @@ import { Metadata } from "next";
 
 export async function generateMetadata() {
   const appUrl = process.env.NEXT_PUBLIC_URL;
+  const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL;
   return {
     title: "yapyap",
     description: "fun live Audio Spaces",
@@ -12,7 +13,7 @@ export async function generateMetadata() {
 
       images: [
         {
-          url: "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/main%20image.png",
+          url: `${imageUrl}`,
           width: 800,
           height: 600,
         },
@@ -21,8 +22,7 @@ export async function generateMetadata() {
     other: {
       "fc:frame": JSON.stringify({
         version: "next",
-        imageUrl:
-          "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/main%20image.png",
+        imageUrl: `${imageUrl}`,
         button: {
           title: "Start Yappin",
           action: {
