@@ -10,35 +10,45 @@ const createToken = async (
   walletAddress: string,
   avatarUrl: string,
 ) => {
-  const accessToken = new AccessToken({
-    apiKey: process.env.API_KEY as string,
-    roomId: roomId as string,
-    role: role,
-    permissions: {
-      admin: true,
-      canConsume: true,
-      canProduce: true,
-      canProduceSources: {
-        cam: true,
-        mic: true,
-        screen: true,
-      },
-      canRecvData: true,
-      canSendData: true,
-      canUpdateMetadata: true,
-    },
-    options: {
-      metadata: {
-        displayName,
-        walletAddress,
-        avatarUrl
-      },
-    },
-  });
+  try {
 
-  const token = await accessToken.toJwt();
+    const accessToken = new AccessToken({
+      apiKey: process.env.API_KEY as string,
+      roomId: roomId as string,
+      role: role,
+      permissions: {
+        admin: true,
+        canConsume: true,
+        canProduce: true,
+        canProduceSources: {
+          cam: true,
+          mic: true,
+          screen: true,
+        },
+        canRecvData: true,
+        canSendData: true,
+        canUpdateMetadata: true,
+      },
+      options: {
+        metadata: {
+          displayName,
+          walletAddress,
+          avatarUrl
+        },
+      },
+    });
+    const token = await accessToken.toJwt();
+    console.log(token, "creating AccessToken JWT");
+    return token;
+  }
+  catch (error) {
+    console.error(error, "error creating AccessToken JWT");
+    return null;
+  }
 
-  return token;
+
+
+
 };
 
 export async function GET(request: Request) {
@@ -48,6 +58,9 @@ export async function GET(request: Request) {
   const name = searchParams.get('name');
   const walletAddress = searchParams.get('walletAddress');
   const avatarUrl = searchParams.get('avatarUrl');
+
+  console.log(roomId, name, walletAddress, avatarUrl);
+  console.log(process.env.API_KEY, "API_KEY");
   let role;
 
   if (!roomId) {
@@ -84,7 +97,7 @@ export async function GET(request: Request) {
     }
   }
 
-  let token: string;
+  let token: string | null;
 
   try {
     token = await createToken(
@@ -94,12 +107,11 @@ export async function GET(request: Request) {
       walletAddress ?? '',
       avatarUrl ?? '',
     );
+    console.log(token, "from the try catch block");
+    return new Response(token, { status: 200 });
+
   } catch (error) {
     console.error('Error :', error);
-    token = await createToken(roomId, Role.LISTENER, name ?? 'Guest', walletAddress ?? '', avatarUrl ?? '');
+    return new Response('Error creating token', { status: 500 });
   }
-
-  console.log(token, "from the token route");
-
-  return new Response(token, { status: 200 });
 }
