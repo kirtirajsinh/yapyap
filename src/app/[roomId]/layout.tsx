@@ -19,11 +19,11 @@ export async function generateMetadata({
   const appUrl = process.env.NEXT_PUBLIC_URL;
 
   return {
-    title: `Yapster`,
+    title: `yapyap`,
     description: `Join the Yap Session ${roomId}`,
     openGraph: {
-      title: `Yap Room`,
-      description: `Yap room ${roomId} - Join the game!`,
+      title: `Yap Space`,
+      description: `Yap Space ${roomId} - Join the game!`,
 
       images: [
         {
@@ -42,7 +42,7 @@ export async function generateMetadata({
           title: "Start Yappin",
           action: {
             type: "launch_frame",
-            name: "Yapster",
+            name: "yapyap",
             url: `${appUrl}/${roomId}`,
             splashImageUrl:
               "https://pub-b8acacbdf4c34874a29a2fdaab996f29.r2.dev/yap%20logo.png",
