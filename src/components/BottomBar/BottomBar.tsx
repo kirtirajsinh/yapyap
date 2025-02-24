@@ -115,9 +115,7 @@ const BottomBar: React.FC<BottomBarProps> = () => {
           open={isOpen}
           onOpenChange={() => setIsOpen((prev) => !prev)}
         >
-          <DropdownMenuTrigger>
-            <button>{BasicIcons.avatar}</button>
-          </DropdownMenuTrigger>
+          <DropdownMenuTrigger>{BasicIcons.avatar}</DropdownMenuTrigger>
           <DropdownMenuContent>
             <EmojiTray
               onClick={() => alert("todo")}
@@ -146,9 +144,7 @@ const BottomBar: React.FC<BottomBarProps> = () => {
           open={showLeaveDropDown}
           onOpenChange={() => setShowLeaveDropDown((prev) => !prev)}
         >
-          <DropdownMenuTrigger>
-            <button>{BasicIcons.leave}</button>
-          </DropdownMenuTrigger>
+          <DropdownMenuTrigger>{BasicIcons.leave}</DropdownMenuTrigger>
           <DropdownMenuContent>
             {role === "host" && (
               <Strip
