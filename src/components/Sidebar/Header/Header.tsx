@@ -1,3 +1,4 @@
+"use client";
 import { BasicIcons } from "@/assets/BasicIcons";
 import useStore from "@/store/slices";
 import React from "react";

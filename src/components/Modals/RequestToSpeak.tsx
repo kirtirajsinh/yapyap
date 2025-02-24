@@ -1,3 +1,4 @@
+"use client";
 import { NestedBasicIcons } from "@/assets/BasicIcons";
 import type React from "react";
 import Button from "../common/Button";

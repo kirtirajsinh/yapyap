@@ -1,10 +1,11 @@
-import { PeerListIcons } from '@/assets/PeerListIcons';
-import useStore from '@/store/slices';
-import { getFallbackAvatar } from '@/utils/helpers';
-import { useRemotePeer } from '@huddle01/react/hooks';
-import { Role } from '@huddle01/server-sdk/auth';
-import Image from 'next/image';
-import type { FC } from 'react';
+"use client";
+import { PeerListIcons } from "@/assets/PeerListIcons";
+import useStore from "@/store/slices";
+import { getFallbackAvatar } from "@/utils/helpers";
+import { useRemotePeer } from "@huddle01/react/hooks";
+import { Role } from "@huddle01/server-sdk/auth";
+import Image from "next/image";
+import type { FC } from "react";
 
 interface AcceptDenyPeerProps {
   peerId: string;

@@ -1,3 +1,4 @@
+"use client";
 import { useLocalPeer, usePeerIds } from "@huddle01/react/hooks";
 import { Role } from "@huddle01/server-sdk/auth";
 import CoHosts from "./ViewPorts/CoHosts";

@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+"use client";
+import { useEffect, useRef } from "react";
 
 function useChatScroll(dep: object) {
   const ref = useRef<HTMLDivElement>(null);

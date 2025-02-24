@@ -1,12 +1,13 @@
-import type React from 'react';
-import Strip from './Strip';
+"use client";
+import type React from "react";
+import Strip from "./Strip";
 import {
   useRoom,
   useHuddle01,
   useRemotePeer,
   useLocalPeer,
-} from '@huddle01/react/hooks';
-import { Role } from '@huddle01/server-sdk/auth';
+} from "@huddle01/react/hooks";
+import { Role } from "@huddle01/server-sdk/auth";
 
 type CoHostDataProps = {
   peerId: string;
@@ -21,7 +22,7 @@ const CoHostData: React.FC<CoHostDataProps> = ({ peerId }) => {
 
   return (
     <>
-      {me.role === 'host' && (
+      {me.role === "host" && (
         <div>
           <Strip
             type="personSpeaker"
@@ -51,7 +52,7 @@ const CoHostData: React.FC<CoHostDataProps> = ({ peerId }) => {
           />
         </div>
       )}
-      {me.role === 'coHost' && (
+      {me.role === "coHost" && (
         <div>
           <Strip
             type="leave"
