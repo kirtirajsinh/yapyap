@@ -124,7 +124,7 @@ const CreateRoom = () => {
       }
 
       if (token && state !== "connected" && state !== "connecting") {
-        console.log("token", token);
+        // console.log("token", token);
         await joinRoom({
           roomId: process.env.NEXT_PUBLIC_ROOM_ID || "",
           token: token,
