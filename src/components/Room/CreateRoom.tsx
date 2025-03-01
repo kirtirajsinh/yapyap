@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
@@ -9,6 +9,9 @@ import { useRouter } from "next/navigation";
 // import { useAccount } from "wagmi";
 import { toast } from "react-hot-toast";
 import DialogOrDrawerWrapper from "../common/DialogOrDrawerWrapper";
+import { useRoom } from "@huddle01/react";
+import { useUserStore } from "@/hooks/UserStore";
+import { getFallbackAvatar } from "@/utils/helpers";
 
 const CreateRoom = () => {
   const [roomName, setRoomName] = useState("");
@@ -17,6 +20,9 @@ const CreateRoom = () => {
   const router = useRouter();
   const [isCreating, setIsCreating] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const { joinRoom, state } = useRoom();
+  const [isJoining, setIsJoining] = useState(false);
+  const { user } = useUserStore();
 
   const handleCreateRoom = async (roomName: string) => {
     // if (!isConnected || !address) {
@@ -103,15 +109,53 @@ const CreateRoom = () => {
     );
   };
 
+  const handleStartSpace = async () => {
+    let token;
+    try {
+      setIsJoining(true);
+      if (state !== "connected" && state !== "connecting") {
+        const response = await fetch(
+          `/token?roomId=${process.env.NEXT_PUBLIC_ROOM_ID}&name=${
+            user?.username ?? "GUEST"
+          }&avatarUrl=${user?.pfpUrl ?? getFallbackAvatar()}`
+        );
+
+        token = await response.text();
+      }
+
+      if (token && state !== "connected" && state !== "connecting") {
+        console.log("token", token);
+        await joinRoom({
+          roomId: process.env.NEXT_PUBLIC_ROOM_ID || "",
+          token: token,
+        });
+      }
+
+      setIsJoining(true);
+    } catch (error) {
+      console.log(error);
+      setIsJoining(true);
+    }
+  };
+
+  useEffect(() => {
+    if (state === "connected") {
+      console.log("connected");
+      router.push(`/${process.env.NEXT_PUBLIC_ROOM_ID}`);
+    }
+  }, [state, router]);
+
   return (
     <>
       <Button
-        disabled={isCreating}
-        onClick={() => {
-          router.push(`/${process.env.NEXT_PUBLIC_ROOM_ID}`);
-        }}
+        disabled={isCreating || isJoining}
+        onClick={() => handleStartSpace()}
       >
-        Start Yapping
+        {isJoining
+          ? "Joining..."
+          : isCreating
+          ? "Creating..."
+          : "Start Yapping"}
       </Button>
       <DialogOrDrawerWrapper
         isOpen={isOpen}
