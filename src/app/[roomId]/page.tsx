@@ -91,27 +91,6 @@ const Home: React.FC<HomeProps> = ({ params }) => {
   const isChatOpen = useStore((state) => state.isChatOpen);
 
   const { peerId } = useLocalPeer<PeerMetadata>();
-  const { user } = useUserStore();
-  const { joinRoom } = useRoom();
-
-  const {
-    data: token,
-    error,
-    isLoading,
-  } = useQuery({
-    queryKey: ["fetchData", resolvedParams.roomId],
-    queryFn: () => generateToken(resolvedParams.roomId, user, state),
-    enabled: !!resolvedParams.roomId && state !== "connected" && !!user,
-    gcTime: 0, // Disable caching (formerly cacheTime)
-    staleTime: 0, // Always consider data stale
-  });
-
-  // // Redirect to lobby if room state is idle
-  // useEffect(() => {
-  //   if (state === "idle") {
-  //     push(`/${resolvedParams.roomId}`);
-  //   }
-  // }, [state, push, resolvedParams.roomId]);
 
   // Handle "requestToSpeak" data messages
   const handleRequestToSpeak = useCallback(
@@ -128,17 +107,24 @@ const Home: React.FC<HomeProps> = ({ params }) => {
     [setShowAcceptRequest, setRequestedPeerId, addRequestedPeers]
   );
 
+  // useEffect(() => {
+  //   if (token && state !== "connected" && !isLoading) {
+  //     joinRoom({
+  //       roomId: resolvedParams.roomId,
+  //       token,
+  //     });
+  //   }
+  //   if (error) {
+  //     console.log("error", error);
+  //   }
+  // }, [token, error]);
+
   useEffect(() => {
-    if (token && state !== "connected" && !isLoading) {
-      joinRoom({
-        roomId: resolvedParams.roomId,
-        token,
-      });
+    if (state === "idle") {
+      push(`/`);
+      return;
     }
-    if (error) {
-      console.log("error", error);
-    }
-  }, [token, error]);
+  }, []);
 
   // Handle "chat" data messages
   const handleChatMessage = useCallback(
@@ -174,13 +160,13 @@ const Home: React.FC<HomeProps> = ({ params }) => {
 
   if (state !== "connected") {
     return (
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-        <div className="text-white text-2xl font-semibold">Joining Room...</div>
+      <div className="absolute inset-0 bg-custom-9 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div className=" text-2xl font-semibold">Joining Space...</div>
       </div>
     );
   }
   return (
-    <section className="bg-audio flex min-h-screen flex-col items-center justify-center w-full relative text-slate-100 md:flex-row">
+    <section className=" flex min-h-screen flex-col items-center justify-center w-full relative  md:flex-row">
       <div className="flex flex-col w-full items-center md:flex-row">
         <GridLayout />
         <Sidebar />
