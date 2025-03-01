@@ -1,9 +1,10 @@
-import React from 'react';
-import Strip from './Strip';
-import { useRoom, useLocalPeer, useRemotePeer } from '@huddle01/react/hooks';
-import { Role } from '@huddle01/server-sdk/auth';
-import { PeerListIcons } from '@/assets/PeerListIcons';
-import { cn } from '@/utils/helpers';
+"use client";
+import React from "react";
+import Strip from "./Strip";
+import { useRoom, useLocalPeer, useRemotePeer } from "@huddle01/react/hooks";
+import { Role } from "@huddle01/server-sdk/auth";
+import { PeerListIcons } from "@/assets/PeerListIcons";
+import { cn } from "@/utils/helpers";
 
 type HostDataProps = {
   peerId: string;
@@ -17,7 +18,7 @@ const HostData: React.FC<HostDataProps> = ({ peerId }) => {
 
   return (
     <>
-      {me.role === 'host' &&
+      {me.role === "host" &&
         (me.peerId !== peerId ? (
           <>
             <Strip

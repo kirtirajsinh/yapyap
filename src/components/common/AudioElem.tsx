@@ -1,6 +1,7 @@
-import type React from 'react';
-import { useEffect, useRef } from 'react';
-import { useRemoteAudio } from '@huddle01/react/hooks';
+"use client";
+import type React from "react";
+import { useEffect, useRef } from "react";
+import { useRemoteAudio } from "@huddle01/react/hooks";
 
 interface Props {
   peerId: string;
@@ -14,11 +15,11 @@ const PeerAudioElem: React.FC<Props> = ({ peerId }) => {
   });
 
   useEffect(() => {
-    console.warn('stream', { state, stream, c: audioRef.current });
-    if (stream && audioRef.current && state === 'playable') {
-      console.warn('----------------------------------');
+    console.warn("stream", { state, stream, c: audioRef.current });
+    if (stream && audioRef.current && state === "playable") {
+      console.warn("----------------------------------");
       console.warn({ stream });
-      console.warn('----------------------------------');
+      console.warn("----------------------------------");
       audioRef.current.srcObject = stream;
 
       audioRef.current.onloadedmetadata = async () => {
@@ -30,7 +31,7 @@ const PeerAudioElem: React.FC<Props> = ({ peerId }) => {
       };
 
       audioRef.current.onerror = () => {
-        console.error('videoCard() | Error is hapenning...');
+        console.error("videoCard() | Error is hapenning...");
       };
     }
   }, [stream, state]);

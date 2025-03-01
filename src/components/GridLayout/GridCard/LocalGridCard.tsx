@@ -1,3 +1,4 @@
+"use client";
 import React, { type FC, useEffect, useState } from "react";
 import Image from "next/image";
 
@@ -37,13 +38,9 @@ const LocalGridCard: FC = () => {
     },
   });
 
-  // console.log(dominantSpeakerId, "activePeerIds", activePeerIds);
-
   return (
     <div
-      className={`relative flex items-center justify-center flex-col transition-all ${
-        dominantSpeakerId === localPeerId ? "border-2 border-red-500" : ""
-      }`}
+      className={`relative flex items-center justify-center flex-col transition-all `}
     >
       <Image
         src={metadata?.avatarUrl || getFallbackAvatar()}
@@ -52,11 +49,13 @@ const LocalGridCard: FC = () => {
         height={100}
         quality={100}
         priority
-        className="maskAvatar"
+        className={`maskAvatar ${
+          dominantSpeakerId === localPeerId ? "border-8 border-custom-9" : ""
+        }`}
       />
 
       <div className="mt-1 text-center">
-        <div className="text-custom-5 text-base font-medium">
+        <div className="text-base font-medium">
           {`${metadata?.displayName} (You)`}
         </div>
         <div className="text-custom-6 text-sm font-normal">{role}</div>

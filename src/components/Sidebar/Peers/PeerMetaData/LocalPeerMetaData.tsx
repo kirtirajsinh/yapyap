@@ -1,3 +1,4 @@
+"use client";
 import { NestedPeerListIcons, PeerListIcons } from "@/assets/PeerListIcons";
 import { cn, getFallbackAvatar } from "@/utils/helpers";
 import Image from "next/image";
@@ -107,7 +108,7 @@ const PeerMetaData: React.FC<PeerMetaDatProps> = ({
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button>{NestedPeerListIcons.inactive.more}</button>
+              {NestedPeerListIcons.inactive.more}
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {role && RoleData[role as keyof typeof RoleData]}

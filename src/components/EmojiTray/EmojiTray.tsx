@@ -1,8 +1,9 @@
-import { BasicIcons } from '@/assets/BasicIcons';
-import { cn } from '@/utils/helpers';
-import type React from 'react';
-import { useDataMessage, useLocalPeer } from '@huddle01/react/hooks';
-import useStore from '@/store/slices';
+"use client";
+import { BasicIcons } from "@/assets/BasicIcons";
+import { cn } from "@/utils/helpers";
+import type React from "react";
+import { useDataMessage, useLocalPeer } from "@huddle01/react/hooks";
+import useStore from "@/store/slices";
 
 type peerMetaData = {
   displayName: string;
@@ -11,22 +12,22 @@ type peerMetaData = {
 };
 
 type Reaction =
-  | ''
-  | '😂'
-  | '😢'
-  | '😦'
-  | '😍'
-  | '🤔'
-  | '👀'
-  | '🙌'
-  | '👍'
-  | '👎'
-  | '🔥'
-  | '🍻'
-  | '🚀'
-  | '🎉'
-  | '❤️'
-  | '💯';
+  | ""
+  | "😂"
+  | "😢"
+  | "😦"
+  | "😍"
+  | "🤔"
+  | "👀"
+  | "🙌"
+  | "👍"
+  | "👎"
+  | "🔥"
+  | "🍻"
+  | "🚀"
+  | "🎉"
+  | "❤️"
+  | "💯";
 
 interface Props {
   onClose: () => void;
@@ -36,21 +37,21 @@ interface Props {
 const EmojiTray: React.FC<Props> = ({ onClick, onClose }) => {
   // Emoji Data
   const emojis: Reaction[] = [
-    '😂',
-    '😢',
-    '😦',
-    '😍',
-    '🤔',
-    '👀',
-    '🙌',
-    '👍',
-    '👎',
-    '🔥',
-    '🍻',
-    '🚀',
-    '🎉',
-    '❤️',
-    '💯',
+    "😂",
+    "😢",
+    "😦",
+    "😍",
+    "🤔",
+    "👀",
+    "🙌",
+    "👍",
+    "👎",
+    "🔥",
+    "🍻",
+    "🚀",
+    "🎉",
+    "❤️",
+    "💯",
   ];
 
   const { sendData } = useDataMessage();
@@ -83,11 +84,11 @@ const EmojiTray: React.FC<Props> = ({ onClick, onClose }) => {
             } as peerMetaData);
           }}
           className={cn(
-            ' w-full text-sm text-slate-100 py-2 rounded-lg font-inter flex items-center justify-center font-medium',
-            metadata?.isHandRaised ? 'bg-custom-1' : 'bg-custom-8',
+            " w-full text-sm text-slate-100 py-2 rounded-lg font-inter flex items-center justify-center font-medium",
+            metadata?.isHandRaised ? "bg-custom-1" : "bg-custom-8"
           )}
         >
-          ✋ {metadata?.isHandRaised ? 'Lower Hand' : 'Raise Hand'}
+          ✋ {metadata?.isHandRaised ? "Lower Hand" : "Raise Hand"}
         </button>
         <div className="grid grid-cols-5 place-items-center gap-2">
           {emojis.map((emoji) => (
@@ -95,9 +96,9 @@ const EmojiTray: React.FC<Props> = ({ onClick, onClose }) => {
               key={emoji}
               onClick={() => {
                 sendData({
-                  to: '*',
+                  to: "*",
                   payload: emoji,
-                  label: 'reaction',
+                  label: "reaction",
                 });
                 setMyReaction(emoji);
               }}

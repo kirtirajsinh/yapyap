@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Role } from "@huddle01/server-sdk/auth";
+import { Button } from "../ui/button";
 
 type BottomBarProps = {};
 
@@ -64,7 +65,7 @@ const BottomBar: React.FC<BottomBarProps> = () => {
   const [showLeaveDropDown, setShowLeaveDropDown] = useState<boolean>(false);
   const { peerIds: speakerPeerIds } = usePeerIds({ roles: [Role.SPEAKER] });
   return (
-    <div className="fixed bottom-0 w-full flex flex-col sm:flex-row items-center px-3 sm:px-4 md:px-10 justify-between py-3 bg-custom-3 md:bg-transparent z-50">
+    <div className="fixed bottom-0 w-full flex flex-col sm:flex-row items-center px-3 sm:px-4 md:px-10 justify-between py-3 bg-custom-9  md:bg-transparent z-50">
       {/* Bottom Bar Left */}
       <div className="mb-2 sm:mb-0 w-full sm:w-auto flex self-center sm:justify-start">
         {role === "host" || role === "coHost" || role === "speaker" ? (
@@ -115,9 +116,7 @@ const BottomBar: React.FC<BottomBarProps> = () => {
           open={isOpen}
           onOpenChange={() => setIsOpen((prev) => !prev)}
         >
-          <DropdownMenuTrigger>
-            <button>{BasicIcons.avatar}</button>
-          </DropdownMenuTrigger>
+          <DropdownMenuTrigger>{BasicIcons.avatar}</DropdownMenuTrigger>
           <DropdownMenuContent>
             <EmojiTray
               onClick={() => alert("todo")}
@@ -126,8 +125,8 @@ const BottomBar: React.FC<BottomBarProps> = () => {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <button
-          className="bg-custom-3 border-custom-4 rounded-lg p-2 sm:p-[11px] z-10"
+        <Button
+          className=" bg-primary  rounded-lg p-2 sm:p-[11px] z-10"
           onClick={() => {
             if (peerId === localPeerId) {
               updateMetadata({
@@ -141,14 +140,12 @@ const BottomBar: React.FC<BottomBarProps> = () => {
           {metadata?.isHandRaised
             ? NestedPeerListIcons.active.hand
             : NestedPeerListIcons.inactive.hand}
-        </button>
+        </Button>
         <DropdownMenu
           open={showLeaveDropDown}
           onOpenChange={() => setShowLeaveDropDown((prev) => !prev)}
         >
-          <DropdownMenuTrigger>
-            <button>{BasicIcons.leave}</button>
-          </DropdownMenuTrigger>
+          <DropdownMenuTrigger>{BasicIcons.leave}</DropdownMenuTrigger>
           <DropdownMenuContent>
             {role === "host" && (
               <Strip
