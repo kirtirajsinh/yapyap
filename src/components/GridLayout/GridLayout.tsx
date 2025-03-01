@@ -20,7 +20,7 @@ const GridLayout: React.FC<GridLayoutProps> = () => {
         <Speakers />
       </div>
       <div className="mt-6 sm:mt-8 md:mt-10">
-        <div className="text-custom-6 text-sm sm:text-base font-normal text-center mb-4 sm:mb-5">
+        <div className=" text-sm sm:text-base font-normal text-center mb-4 sm:mb-5">
           Listeners -{" "}
           {peerIds.length +
             (localPeerRole && localPeerRole === Role.LISTENER ? 1 : 0)}
