@@ -12,10 +12,10 @@ export async function GET() {
             "signature": "MHhiYWM1NzlkYjZlOTZiMDAxMmZjMTdhOWRiYjIzNzNkZTk3ODM0MGU4YmNhNGEyN2VjNWI4MjgxMTczZjk5NzYyMjRkNjYzMjg0YzU2MzZlMGYzZWFiMTY2OGQwMmExN2Q3MTdmMTM0YjE3YWExZjNkYjU0OTcyYTZlMTg3NjgyMjFi"
         },
         frame: {
-            version: "1",
+            version: "1.1",
             name: "yapyap",
             iconUrl: `${logoUrl}`,
-            homeUrl: `${appUrl}/${roomId}`,
+            homeUrl: `${appUrl}`,
             imageUrl: `${imageUrl}`,
             buttonTitle: "Start Yapping",
             splashImageUrl: `${logoUrl}`,
