@@ -100,6 +100,7 @@ const BottomBar: React.FC<BottomBarProps> = () => {
               onClick={async () => {
                 await enableAudio();
               }}
+              className="bg-secondary  rounded-lg hover:scale-105 "
             >
               {NestedBasicIcons.inactive.mic}
             </button>
@@ -108,6 +109,7 @@ const BottomBar: React.FC<BottomBarProps> = () => {
               onClick={async () => {
                 await disableAudio();
               }}
+              className="bg-secondary  rounded-lg hover:scale-105 "
             >
               {NestedBasicIcons.active.mic}
             </button>
@@ -116,7 +118,9 @@ const BottomBar: React.FC<BottomBarProps> = () => {
           open={isOpen}
           onOpenChange={() => setIsOpen((prev) => !prev)}
         >
-          <DropdownMenuTrigger>{BasicIcons.avatar}</DropdownMenuTrigger>
+          <DropdownMenuTrigger className="bg-secondary  rounded-lg hover:scale-105 ">
+            {BasicIcons.avatar}
+          </DropdownMenuTrigger>
           <DropdownMenuContent>
             <EmojiTray
               onClick={() => alert("todo")}
@@ -126,7 +130,7 @@ const BottomBar: React.FC<BottomBarProps> = () => {
         </DropdownMenu>
 
         <Button
-          className=" bg-primary  rounded-lg p-2 sm:p-[11px] z-10"
+          className=" bg-secondary hover:bg-none  rounded-lg p-2 sm:p-[11px] w-10 h-10  z-10"
           onClick={() => {
             if (peerId === localPeerId) {
               updateMetadata({
@@ -145,7 +149,9 @@ const BottomBar: React.FC<BottomBarProps> = () => {
           open={showLeaveDropDown}
           onOpenChange={() => setShowLeaveDropDown((prev) => !prev)}
         >
-          <DropdownMenuTrigger>{BasicIcons.leave}</DropdownMenuTrigger>
+          <DropdownMenuTrigger className="bg-secondary  rounded-lg hover:scale-105">
+            {BasicIcons.leave}
+          </DropdownMenuTrigger>
           <DropdownMenuContent>
             {role === "host" && (
               <Strip
@@ -172,7 +178,7 @@ const BottomBar: React.FC<BottomBarProps> = () => {
       {/* Bottom Bar Right */}
       <div className="mt-2 sm:mt-0 flex items-center gap-2 sm:gap-4 w-full sm:w-auto justify-center">
         <OutlineButton
-          className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+          className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm bg-secondary hover:scale-105"
           onClick={() => {
             setSidebarView(sidebarView === "peers" ? "close" : "peers");
             if (isChatOpen) {
@@ -188,7 +194,7 @@ const BottomBar: React.FC<BottomBarProps> = () => {
         </OutlineButton>
 
         <OutlineButton
-          className="flex items-center"
+          className="flex items-center bg-secondary hover:scale-105"
           onClick={() => {
             setIsChatOpen(!isChatOpen);
             if (sidebarView !== "close") {

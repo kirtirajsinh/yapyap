@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { Button } from "../ui/button";
 
 const AddFrame = () => {
-  const { user } = useUserStore();
+  const { user, setClient } = useUserStore();
   const [loading, setLoading] = React.useState(false);
   const handleClick = async () => {
     try {
@@ -20,6 +20,9 @@ const AddFrame = () => {
       setLoading(true);
       const result = await FrameSDK.actions.addFrame();
       if (result) {
+        setClient({
+          added: true,
+        });
         toast.success("Frame Added ");
       } else {
         toast.error("Error adding frame");

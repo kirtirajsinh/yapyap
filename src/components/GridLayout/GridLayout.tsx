@@ -14,12 +14,12 @@ const GridLayout: React.FC<GridLayoutProps> = () => {
 
   return (
     <div className="w-full h-full mx-2 md:ml-10 flex items-center justify-center flex-col py-10 md:py-20">
-      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4 w-full">
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4 w-full pt-12 ">
         <Hosts />
         <CoHosts />
         <Speakers />
       </div>
-      <div className="mt-6 sm:mt-8 md:mt-10">
+      <div className="mt-6 sm:mt-8 md:mt-10 mb-16">
         <div className=" text-sm sm:text-base font-normal text-center mb-4 sm:mb-5">
           Listeners -{" "}
           {peerIds.length +

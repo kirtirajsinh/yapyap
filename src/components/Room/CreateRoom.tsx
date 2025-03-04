@@ -152,7 +152,7 @@ const CreateRoom = () => {
         onClick={() => handleStartSpace()}
       >
         {isJoining
-          ? "Joining..."
+          ? "Joining Space..."
           : isCreating
           ? "Creating..."
           : "Start Yapping"}

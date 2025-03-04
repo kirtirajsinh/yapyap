@@ -129,7 +129,7 @@ const Chat = () => {
       <Drawer open={isChatOpen} onOpenChange={setIsChatOpen}>
         <DrawerContent className="h-[80vh] ">
           <DrawerHeader>
-            <DrawerTitle className="">Yap Yap Yap</DrawerTitle>
+            <DrawerTitle className="">yapyap</DrawerTitle>
           </DrawerHeader>
           <DrawerDescription className="text-center">
             Chat with your frens

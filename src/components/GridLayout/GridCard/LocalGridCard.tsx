@@ -7,6 +7,7 @@ import { BasicIcons } from "@/assets/BasicIcons";
 import {
   useActivePeers,
   useDataMessage,
+  useLocalAudio,
   useLocalPeer,
 } from "@huddle01/react/hooks";
 import { getFallbackAvatar } from "@/utils/helpers";
@@ -14,6 +15,7 @@ import { getFallbackAvatar } from "@/utils/helpers";
 const LocalGridCard: FC = () => {
   const [reaction, setReaction] = useState("");
   const { activePeerIds, dominantSpeakerId } = useActivePeers();
+  const { isAudioOn } = useLocalAudio();
 
   const {
     metadata,
@@ -42,17 +44,21 @@ const LocalGridCard: FC = () => {
     <div
       className={`relative flex items-center justify-center flex-col transition-all `}
     >
-      <Image
-        src={metadata?.avatarUrl || getFallbackAvatar()}
-        alt="default-avatar"
-        width={100}
-        height={100}
-        quality={100}
-        priority
-        className={`maskAvatar ${
-          dominantSpeakerId === localPeerId ? "border-8 border-custom-9" : ""
+      <div
+        className={`avatar-wrapper ${
+          dominantSpeakerId === localPeerId && isAudioOn ? "glowing-ring" : ""
         }`}
-      />
+      >
+        <Image
+          src={metadata?.avatarUrl || getFallbackAvatar()}
+          alt="default-avatar"
+          width={100}
+          height={100}
+          quality={100}
+          priority
+          className={`maskAvatar `}
+        />
+      </div>
 
       <div className="mt-1 text-center">
         <div className="text-base font-medium">

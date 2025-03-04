@@ -11,17 +11,13 @@ export const faq = [
     },
     {
         id: 3,
-        "faq": "SuperPower to Speak at Anytime (for MemeCoin holders)",
-        "label": "coming_soon"
+        "faq": "Join Speakers, Once there's less than 3 speakers, you'll be promoted to a speaker",
+        "label": "done"
     }, {
         id: 4,
-        "faq": "Perks to Yap",
-        "label": "coming_soon"
+        "faq": "Dm  @boredhead to get your own room & report any issues",
+        "label": "done"
     },
-    {
-        id: 5,
-        "faq": "SuperChat to Say yout Opinion Loud/Roast",
-        "label": "coming_soon"
-    },
+
 
 ]
