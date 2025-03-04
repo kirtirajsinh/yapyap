@@ -23,6 +23,11 @@ type ToasterProps = {
 const HuddleContextProvider: React.FC<ToasterProps> = ({ children }) => {
   const huddleClient = new HuddleClient({
     projectId: process.env.NEXT_PUBLIC_PROJECT_ID ?? "",
+    options: {
+      activeSpeakers: {
+        size: 8,
+      },
+    },
   });
 
   return (
