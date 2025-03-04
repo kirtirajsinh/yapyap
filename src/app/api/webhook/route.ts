@@ -57,7 +57,7 @@ export async function POST(request: Request) {
                 const addNotif = await sendFrameNotification({
                     fid,
                     title: "Welcome,now you got a space to Yap",
-                    body: "You'll be notified when we have updates",
+                    body: "start yapping with your Farcaster frens",
                 });
                 console.log(addNotif, "addNotif");
             } else {
