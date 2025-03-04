@@ -53,7 +53,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
           aria-describedby="drawer-description"
         >
           <DrawerHeader>
-            <DrawerTitle className="">Yap Yap Yap</DrawerTitle>
+            <DrawerTitle className="">yapyap</DrawerTitle>
           </DrawerHeader>
           <DrawerDescription className="text-center">
             Connected Frens
