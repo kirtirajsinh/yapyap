@@ -25,25 +25,21 @@ const Faq = () => {
         title="How it Works? 🤔"
         description="Frequently Asked Questions"
       >
-        {faq.map((item, index) => (
-          <div
-            key={index}
-            className={`flex flex-col gap-4 ${
-              item.label === "coming_soon" ? "text-gray-400" : ""
-            }`}
-          >
-            <div className="flex items-start gap-2">
-              <Sparkles className="w-4 h-4 text-purple-400 mt-1 flex-shrink-0" />
-              <div className="text-lg font-bold">
-                {item.faq.split("\n").map((line, i) => (
-                  <div key={i} className={i > 0 ? "ml-6" : ""}>
-                    {line}
-                  </div>
-                ))}
-              </div>
+        <div className="flex  flex-col  gap-2 overflow-x-auto whitespace-nowrap">
+          {faq.map((item, index) => (
+            <div
+              key={index}
+              className={`flex items-center gap-1 px-2 ${
+                item.label === "coming_soon" ? "text-gray-400" : ""
+              }`}
+            >
+              <Sparkles className="w-4 h-4 text-custom-9 flex-shrink-0" />
+              <span className="text-md font-bold  sm:max-w-none">
+                {item.faq}
+              </span>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </DialogOrDrawerWrapper>
     </>
   );

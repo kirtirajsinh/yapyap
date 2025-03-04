@@ -62,7 +62,7 @@ const EmojiTray: React.FC<Props> = ({ onClick, onClose }) => {
   return (
     <div>
       <div className="relative">
-        <div className=" border-b border-slate-700 py-3 text-center text-base font-semibold text-slate-100">
+        <div className=" border-b border-slate-700 py-3 text-center text-base font-semibold">
           Reactions
           <span
             className="absolute right-2 cursor-pointer"
