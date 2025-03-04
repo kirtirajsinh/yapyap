@@ -1,21 +1,26 @@
 export const faq = [
     {
         id: 1,
-        "faq": "First Come First Serve",
-        "label": "dome"
+        "faq": "yapyap is like X Spaces but for Farcaster",
+        "label": "done"
     },
     {
         id: 2,
-        "faq": "Only 3 Speakers Allowed At a Time (exception, if you've a good timing)",
-        "label": "dome"
+        "faq": "open this frame anytime to talk with friends",
+        "label": "done"
     },
     {
         id: 3,
-        "faq": "Join Speakers, Once there's less than 3 speakers, you'll be promoted to a speaker",
+        "faq": "for now it is 1 room, we may add more later",
         "label": "done"
     }, {
         id: 4,
-        "faq": "Dm  @boredhead to get your own room & report any issues",
+        "faq": "there are only 3 speakers, the first 3 to join",
+        "label": "done"
+    },
+    {
+        id: 5,
+        "faq": "DM @boredhead with feedback/questions",
         "label": "done"
     },
 
