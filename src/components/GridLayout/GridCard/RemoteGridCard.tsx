@@ -54,22 +54,24 @@ const GridCard: React.FC<GridCardProps> = ({ peerId }) => {
 
   return (
     <div
-      className={`relative flex items-center justify-center flex-col transition-all ${
-        dominantSpeakerId === remotePeerId ? "border-8 border-custom-9" : ""
-      }`}
+      className={`relative flex items-center justify-center flex-col transition-all `}
     >
       {stream && <AudioElem peerId={peerId} />}
-      <Image
-        src={metadata?.avatarUrl || getFallbackAvatar()}
-        alt="default-avatar"
-        width={100}
-        height={100}
-        quality={100}
-        priority
-        className={`maskAvatar ${
-          dominantSpeakerId === remotePeerId ? "border-8 border-custom-9" : ""
+      <div
+        className={`${
+          dominantSpeakerId === remotePeerId ? "glowing-ring" : ""
         }`}
-      />
+      >
+        <Image
+          src={metadata?.avatarUrl || getFallbackAvatar()}
+          alt="default-avatar"
+          width={100}
+          height={100}
+          quality={100}
+          priority
+          className={`maskAvatar `}
+        />
+      </div>
 
       <div className="mt-1 text-center">
         <div className=" text-base font-medium">{metadata?.displayName}</div>
