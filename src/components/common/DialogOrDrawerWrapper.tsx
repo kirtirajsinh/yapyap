@@ -30,9 +30,7 @@ const DialogOrDrawerWrapper = ({
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
         <DrawerContent className=" max-h-[90vh] focus-visible:outline-none mb-4">
           <DrawerHeader className="focus-visible:outline-none">
-            <DrawerTitle className="text-center text-slate-300">
-              {title}
-            </DrawerTitle>
+            <DrawerTitle className="text-center">{title}</DrawerTitle>
             <DrawerDescription>{description}</DrawerDescription>
           </DrawerHeader>
           <div className="p-4 overflow-y-auto focus-visible:outline-none">
