@@ -6,32 +6,32 @@ import { WagmiProvider } from "wagmi";
 import { baseSepolia } from "wagmi/chains";
 import "@rainbow-me/rainbowkit/styles.css";
 import FrameSDK from "@farcaster/frame-sdk";
-import { createConfig, http } from "@wagmi/core";
+// import { createConfig, http } from "@wagmi/core";
 import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
-import {
-  coinbaseWallet,
-  injected,
-  metaMask,
-  walletConnect,
-} from "@wagmi/connectors";
+// import {
+//   coinbaseWallet,
+//   injected,
+//   metaMask,
+//   walletConnect,
+// } from "@wagmi/connectors";
 import { useUserStore } from "@/hooks/UserStore";
 
 //Add farcasterFrame() to the Connecters array for frame support.
-export const config = createConfig({
-  chains: [baseSepolia],
-  connectors: [
-    injected(),
-    farcasterFrame(),
-    walletConnect({
-      projectId: "a6cb25bbf13cfd3f0d9147e757e0925a",
-    }),
-    coinbaseWallet(),
-  ],
-  //   ssr: true,
-  transports: {
-    [baseSepolia.id]: http(),
-  },
-});
+// export const config = createConfig({
+//   chains: [baseSepolia],
+//   connectors: [
+//     injected(),
+//     farcasterFrame(),
+//     walletConnect({
+//       projectId: "a6cb25bbf13cfd3f0d9147e757e0925a",
+//     }),
+//     coinbaseWallet(),
+//   ],
+//   //   ssr: true,
+//   transports: {
+//     [baseSepolia.id]: http(),
+//   },
+// });
 
 function FarcasterFrameProvider({ children }: PropsWithChildren) {
   const { setUser, setClient } = useUserStore();
@@ -45,10 +45,15 @@ function FarcasterFrameProvider({ children }: PropsWithChildren) {
       const frameuser = await FrameSDK.context;
       console.log("Frame Action ready", frameuser);
 
-      if (frameuser?.client) {
-        setClient({
-          added: frameuser?.client.added,
-        });
+      if (!frameuser?.client?.added) {
+        const add = await FrameSDK.actions.addFrame();
+        if (add) {
+          console.log("Frame Added");
+          setClient({
+            added: true,
+          });
+        }
+        setIsSDKLoaded(true);
       }
 
       if (frameuser?.user) {

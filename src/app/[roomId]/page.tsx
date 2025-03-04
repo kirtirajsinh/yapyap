@@ -161,7 +161,7 @@ const Home: React.FC<HomeProps> = ({ params }) => {
   if (state !== "connected") {
     return (
       <div className="absolute inset-0 bg-custom-9 backdrop-blur-sm z-50 flex items-center justify-center">
-        <div className=" text-2xl font-semibold">Joining Space...</div>
+        <div className=" text-2xl font-semibold">Loading...</div>
       </div>
     );
   }

@@ -19,18 +19,20 @@ const AddFrame = () => {
       }
       setLoading(true);
       const result = await FrameSDK.actions.addFrame();
+      console.log("frame added", result);
       if (result) {
         setClient({
           added: true,
         });
         toast.success("Frame Added ");
       } else {
-        toast.error("Error adding frame");
+        // toast.error("Error adding frame");
+        console.log("Frame not added", result);
       }
       setLoading(false);
     } catch (error) {
       console.log(error);
-      toast.error("Error adding frame");
+      // toast.error("Error adding frame");
       setLoading(false);
     }
   };
