@@ -54,6 +54,10 @@ function FarcasterFrameProvider({ children }: PropsWithChildren) {
           });
         }
         setIsSDKLoaded(true);
+      } else {
+        setClient({
+          added: true,
+        });
       }
 
       if (frameuser?.user) {
