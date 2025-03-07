@@ -148,7 +148,9 @@ const CreateRoom = () => {
   return (
     <>
       <Button
-        disabled={isCreating || isJoining}
+        disabled={
+          isCreating || isJoining || window.navigator.userAgent === "warpcast"
+        }
         onClick={() => handleStartSpace()}
       >
         {isJoining
