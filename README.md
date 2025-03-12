@@ -1,6 +1,6 @@
-# Huddle01 Audio Spaces Demo App 🎙️
+# yapyap Audio Space 🎙️
 
-A beginner-friendly demo application showcasing how to build audio spaces using Huddle01's React SDK. This project demonstrates real-time audio communication features similar to Twitter Spaces or Clubhouse, built with Next.js, TypeScript, and Zustand.
+Audio Spaces within Farcaster framesv2.
 
 ## 🚀 Features
 
