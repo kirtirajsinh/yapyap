@@ -1,4 +1,3 @@
-import Disclaimer from "@/components/Nav/Disclaimer";
 import CreateRoom from "@/components/Room/CreateRoom";
 import { Metadata } from "next";
 
@@ -43,7 +42,6 @@ export async function generateMetadata() {
 export default async function Home() {
   return (
     <div className="flex flex-col items-center justify-center h-screen ">
-      <Disclaimer />
       <CreateRoom />
     </div>
   );
