@@ -15,6 +15,7 @@ import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
 //   walletConnect,
 // } from "@wagmi/connectors";
 import { useUserStore } from "@/hooks/UserStore";
+import HuddleContextProvider from "./HuddleContextProvider";
 
 //Add farcasterFrame() to the Connecters array for frame support.
 // export const config = createConfig({
@@ -43,22 +44,6 @@ function FarcasterFrameProvider({ children }: PropsWithChildren) {
       // Add the FrameSDK.actions.ready() otherwise your app will get stuck in a loading state i.e. a Splash screen.
       FrameSDK.actions.ready();
       const frameuser = await FrameSDK.context;
-      console.log("Frame Action ready", frameuser);
-
-      if (!frameuser?.client?.added) {
-        const add = await FrameSDK.actions.addFrame();
-        if (add) {
-          console.log("Frame Added");
-          setClient({
-            added: true,
-          });
-        }
-        setIsSDKLoaded(true);
-      } else {
-        setClient({
-          added: true,
-        });
-      }
 
       if (frameuser?.user) {
         setUser({
@@ -76,22 +61,55 @@ function FarcasterFrameProvider({ children }: PropsWithChildren) {
           "No user found in FrameSDK context or displayName is undefined."
         );
       }
+
+      if (!frameuser?.client?.added) {
+        const add = await FrameSDK.actions.addFrame();
+        if (add) {
+          console.log("Frame Added");
+          setClient({
+            added: true,
+          });
+        }
+        setIsSDKLoaded(true);
+      } else {
+        setClient({
+          added: true,
+        });
+      }
     };
     if (!isSDKLoaded) {
       load();
     }
-  }, [isSDKLoaded, setUser]);
+    load();
+  }, [isSDKLoaded, setUser, setClient]);
   return <>{children}</>;
 }
 
 const queryClient = new QueryClient();
 
 const Provider = ({ children }: { children: React.ReactNode }) => {
+  useEffect(() => {
+    const os = navigator?.userAgent?.includes("Android");
+    console.log(os, "os");
+    if (!os) {
+      Object.defineProperty(navigator, "userAgent", {
+        get: () =>
+          `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Safari/605.1.15`,
+      });
+    } else {
+      Object.defineProperty(navigator, "userAgent", {
+        get: () =>
+          `Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Mobile Safari/537.36`,
+      });
+    }
+  }, []);
   return (
     // <WagmiProvider config={config}>
     <QueryClientProvider client={queryClient}>
       {/* <RainbowKitProvider> */}
-      <FarcasterFrameProvider>{children}</FarcasterFrameProvider>
+      <FarcasterFrameProvider>
+        <HuddleContextProvider>{children}</HuddleContextProvider>
+      </FarcasterFrameProvider>
       {/* </RainbowKitProvider> */}
     </QueryClientProvider>
     // </WagmiProvider>

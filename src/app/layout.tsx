@@ -6,8 +6,9 @@ import Navbar from "@/components/Nav/Navbar";
 import { Manrope } from "next/font/google";
 import dynamic from "next/dynamic";
 // import huddleContext Provider dynamica
-const HuddleContextProvider = dynamic(
-  () => import("@/components/ClientComponents/HuddleContextProvider")
+
+const Provider = dynamic(
+  () => import("@/components/ClientComponents/WagmiProvider")
 );
 
 const manrope = Manrope({
@@ -23,10 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="light" suppressHydrationWarning>
       <body className={`${manrope.variable} font-manrope antialiased`}>
-        <HuddleContextProvider>
+        <Provider>
           <Navbar />
           {children}
-        </HuddleContextProvider>
+        </Provider>
       </body>
     </html>
   );
