@@ -3,7 +3,7 @@ import React from "react";
 import DialogOrDrawerWrapper from "../common/DialogOrDrawerWrapper";
 import { Button } from "../ui/button";
 import { Sparkles } from "lucide-react";
-import { faq } from "@/utils/faq";
+import { faq } from "@/utils/faq"; // Assuming faq is an array of objects like { faq: string, label?: string }
 
 const Faq = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -16,6 +16,7 @@ const Faq = () => {
         onClick={() => {
           setIsOpen(true);
         }}
+        aria-label="Open Frequently Asked Questions"
       >
         <Sparkles />
       </Button>
@@ -25,18 +26,21 @@ const Faq = () => {
         title="How it Works? 🤔"
         description="Frequently Asked Questions"
       >
-        <div className="flex  flex-col  gap-2 overflow-x-auto whitespace-nowrap">
+        {/* Ensure no whitespace-nowrap here */}
+        <div className="flex flex-col gap-2 w-full  ">
           {faq.map((item, index) => (
             <div
               key={index}
-              className={`flex items-center gap-1 px-2 ${
+              // Use items-start for alignment with the first line
+              className={`flex items-start gap-1 px-2 ${
+                // Changed items-center to items-start
                 item.label === "coming_soon" ? "text-gray-400" : ""
               }`}
             >
-              <Sparkles className="w-4 h-4 text-custom-9 flex-shrink-0" />
-              <span className="text-md font-bold  sm:max-w-none">
-                {item.faq}
-              </span>
+              {/* Added mt-1 (or adjust as needed) to visually align icon better with text line-height */}
+              <Sparkles className="w-4 h-4 text-custom-9 flex-shrink-0 mt-1" />
+              {/* REMOVED whitespace-nowrap, overflow-hidden, text-ellipsis, flex-1, min-w-0 */}
+              <span className="text-md font-bold">{item.faq}</span>
             </div>
           ))}
         </div>

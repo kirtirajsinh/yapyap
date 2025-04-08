@@ -6,7 +6,7 @@ export const faq = [
     },
     {
         id: 2,
-        "faq": "open this frame anytime to talk with friends",
+        "faq": "24x7 open space. Join anytime to talk with friends",
         "label": "done"
     },
     {
